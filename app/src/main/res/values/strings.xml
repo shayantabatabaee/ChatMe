@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ChatMe</string>
+    <string name="message_area_text">Write a message . . . </string>
 </resources>
