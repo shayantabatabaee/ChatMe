@@ -31,7 +31,7 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
     @BindView(R.id.messageRecyclerView)
     RecyclerView recyclerView;
 
-    private RecyclerView.LayoutManager layoutManager;
+    private LinearLayoutManager layoutManager;
     private RecyclerView.Adapter adapter;
 
     private ArrayList<Message> messageList;
@@ -41,11 +41,11 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         initObjects();
-        presenter.retrieveMessage();
         unbinder = ButterKnife.bind(this);
         sendButton.setOnClickListener(this);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
+        //recyclerView.setAdapter(adapter);
+        presenter.retrieveMessage();
 
     }
 
@@ -53,20 +53,23 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
         messageList = new ArrayList<>();
         presenter = new ChatPresenter(this);
         layoutManager = new LinearLayoutManager(this);
-        adapter = new RecyclerViewAdapter(messageList);
-
+        //adapter = new RecyclerViewAdapter(messageList);
     }
 
     @Override
     public void onClick(View v) {
         presenter.sendMessage(messageSendingContent.getText().toString());
         messageSendingContent.setText("");
+
     }
 
     @Override
-    public void displayMessages(ArrayList<Message> messageList) {
-        this.messageList = messageList;
+    public void displayMessages(ArrayList<Message> messages) {
+       /* messageList.clear();
+        messageList.addAll(messages);*/
+        adapter = new RecyclerViewAdapter(messages);
+        recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+        recyclerView.smoothScrollToPosition(adapter.getItemCount());
     }
-
 }

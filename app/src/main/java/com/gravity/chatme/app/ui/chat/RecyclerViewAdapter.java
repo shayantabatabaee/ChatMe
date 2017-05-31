@@ -36,6 +36,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.message, viewGroup, false);
+        view.setBackgroundResource(R.drawable.rounded_corner);
         ViewHolder vh = new ViewHolder(view);
         return vh;
     }

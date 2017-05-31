@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public interface ChatContract {
 
     interface View {
-        void displayMessages(ArrayList<Message> messageList);
+        void displayMessages(ArrayList<Message> messages);
     }
 
     interface Presenter {

@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "330253966020",
+    "firebase_url": "https://chatme-3a6ad.firebaseio.com",
+    "project_id": "chatme-3a6ad",
+    "storage_bucket": "chatme-3a6ad.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:330253966020:android:aa9aa36d388bdaec",
+        "android_client_info": {
+          "package_name": "com.gravity.chatme"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "330253966020-2ks4ohml8cgb5iedkmjvvgj6gsagjnie.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gravity.chatme",
+            "certificate_hash": "4233b264b40c27a84561f1f386cb10a113a7e424"
+          }
+        },
+        {
+          "client_id": "330253966020-ibc46uv1sa9fdpvsgurjgsv9i1mverqd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCbkDAFt4UZnu-kDqCC3V622aNZsa9zBXM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "330253966020-ibc46uv1sa9fdpvsgurjgsv9i1mverqd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
