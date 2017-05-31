@@ -37,7 +37,7 @@ public class ChatPresenter implements ChatContract.Presenter {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Message message = dataSnapshot.getValue(Message.class);
                 messageList.add(message);
-                view.displayMessages(message);
+                view.displayMessages(messageList);
 
             }
 
