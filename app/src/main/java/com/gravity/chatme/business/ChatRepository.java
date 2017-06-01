@@ -37,22 +37,27 @@ public class ChatRepository {
     }
 
     public void retrieveMessage(final ChatRepositoryListener listener) {
+        retrieveDBMessage(listener);
+        fetchFirebaseMessage(listener);
+    }
+
+
+    private void retrieveDBMessage(ChatRepositoryListener listener) {
         dbMessageList.addAll(messageDao.getAllMessages());
         if (!dbMessageList.isEmpty()) {
             lastMessageTime = dbMessageList.get(dbMessageList.size() - 1).getMessageTime();
-            listener.onRetrieveMessage(dbMessageList);
+            listener.onRetrieveDBMessage(dbMessageList);
         }
 
+    }
 
+    private void fetchFirebaseMessage(final ChatRepositoryListener listener) {
         firebaseHelper.retrieveMessage(new FirebaseHelper.FirebaseHelperListener() {
 
             @Override
-            public void onMessageRecieved(ArrayList<Message> messages) {
-                finalMessageList = new ArrayList<>();
-                finalMessageList.addAll(dbMessageList);
-                finalMessageList.addAll(messages);
-                listener.onRetrieveMessage(finalMessageList);
-                messageDao.insertMessage(messages);
+            public void onMessageRecieved(Message message) {
+                listener.OnRetrieveFirebaseMessage(message);
+                messageDao.insertMessage(message);
             }
 
 
@@ -66,7 +71,9 @@ public class ChatRepository {
 
     public interface ChatRepositoryListener {
 
-        void onRetrieveMessage(ArrayList<Message> messages);
+        void onRetrieveDBMessage(ArrayList<Message> messages);
+
+        void OnRetrieveFirebaseMessage(Message message);
 
         void onFailure(String message);
     }

@@ -8,6 +8,8 @@ public interface ChatContract {
 
     interface View {
         void displayMessages(ArrayList<Message> messages);
+
+        void displayMessage(Message message);
     }
 
     interface Presenter {

@@ -18,5 +18,5 @@ public interface MessageDao {
     List<Message> getAllMessages();
 
     @Insert(onConflict = REPLACE)
-    void insertMessage(List<Message> message);
+    void insertMessage(Message message);
 }

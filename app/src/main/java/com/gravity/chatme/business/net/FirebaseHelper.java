@@ -1,18 +1,15 @@
 package com.gravity.chatme.business.net;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.gravity.chatme.business.model.Message;
-
-import java.util.ArrayList;
 
 public class FirebaseHelper {
 
     private DatabaseReference mDatabaseReference;
-    private ArrayList<Message> messageList;
 
     public FirebaseHelper() {
         mDatabaseReference = FirebaseDatabase.getInstance().getReference();
@@ -24,11 +21,11 @@ public class FirebaseHelper {
     }
 
     public void retrieveMessage(final FirebaseHelperListener listener, Long messageTime) {
-        /*mDatabaseReference.child("messages").orderByChild("messageTime").startAt(messageTime).addChildEventListener(new ChildEventListener() {
+        mDatabaseReference.child("messages").orderByChild("messageTime").startAt(messageTime + 1).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Message message = dataSnapshot.getValue(Message.class);
-                listener.onAddMessage(message);
+                listener.onMessageRecieved(message);
             }
 
             @Override
@@ -50,9 +47,9 @@ public class FirebaseHelper {
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });*/
+        });
 
-        mDatabaseReference.child("messages").orderByChild("messageTime").startAt(messageTime+1).addValueEventListener(new ValueEventListener() {
+        /*mDatabaseReference.child("messages").orderByChild("messageTime").startAt(messageTime+1).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 messageList = new ArrayList<>();
@@ -67,14 +64,14 @@ public class FirebaseHelper {
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
+        });*/
 
     }
 
 
     public interface FirebaseHelperListener {
 
-        void onMessageRecieved(ArrayList<Message> messages);
+        void onMessageRecieved(Message message);
 
         void onFailure(String error);
 

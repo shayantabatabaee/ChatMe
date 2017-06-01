@@ -44,7 +44,7 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
         unbinder = ButterKnife.bind(this);
         sendButton.setOnClickListener(this);
         recyclerView.setLayoutManager(layoutManager);
-        //recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(adapter);
         presenter.retrieveMessage();
 
     }
@@ -53,7 +53,7 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
         messageList = new ArrayList<>();
         presenter = new ChatPresenter(this);
         layoutManager = new LinearLayoutManager(this);
-        //adapter = new RecyclerViewAdapter(messageList);
+        adapter = new RecyclerViewAdapter(messageList);
     }
 
     @Override
@@ -65,11 +65,16 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
 
 
     @Override
+    public void displayMessage(Message message) {
+        messageList.add(message);
+        adapter.notifyDataSetChanged();
+        recyclerView.smoothScrollToPosition(adapter.getItemCount());
+
+    }
+
+    @Override
     public void displayMessages(ArrayList<Message> messages) {
-        /*messageList.clear();
-        messageList.addAll(messages);*/
-        adapter = new RecyclerViewAdapter(messages);
-        recyclerView.setAdapter(adapter);
+        messageList.addAll(messages);
         adapter.notifyDataSetChanged();
         recyclerView.smoothScrollToPosition(adapter.getItemCount());
     }

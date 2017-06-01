@@ -23,8 +23,12 @@ public class ChatPresenter implements ChatContract.Presenter {
     @Override
     public void retrieveMessage() {
         chatRepository.retrieveMessage(new ChatRepository.ChatRepositoryListener() {
+            @Override
+            public void OnRetrieveFirebaseMessage(Message message) {
+                view.displayMessage(message);
+            }
 
-            public void onRetrieveMessage(ArrayList<Message> messages) {
+            public void onRetrieveDBMessage(ArrayList<Message> messages) {
                 view.displayMessages(messages);
             }
 
