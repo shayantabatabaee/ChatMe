@@ -17,15 +17,14 @@ public class ChatPresenter implements ChatContract.Presenter {
 
     @Override
     public void sendMessage(String messageContent) {
-        chatRepository.sendMessage(messageContent);
+        chatRepository.addMessage(messageContent);
     }
 
     @Override
     public void retrieveMessage() {
         chatRepository.retrieveMessage(new ChatRepository.ChatRepositoryListener() {
 
-            @Override
-            public void onRetrieveMessages(ArrayList<Message> messages) {
+            public void onRetrieveMessage(ArrayList<Message> messages) {
                 view.displayMessages(messages);
             }
 

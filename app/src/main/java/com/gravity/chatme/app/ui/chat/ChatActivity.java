@@ -63,9 +63,10 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
 
     }
 
+
     @Override
     public void displayMessages(ArrayList<Message> messages) {
-       /* messageList.clear();
+        /*messageList.clear();
         messageList.addAll(messages);*/
         adapter = new RecyclerViewAdapter(messages);
         recyclerView.setAdapter(adapter);

@@ -52,7 +52,7 @@ public class FirebaseHelper {
             }
         });*/
 
-        mDatabaseReference.child("messages").orderByChild("messageTime").addValueEventListener(new ValueEventListener() {
+        mDatabaseReference.child("messages").orderByChild("messageTime").startAt(messageTime+1).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 messageList = new ArrayList<>();
@@ -60,7 +60,7 @@ public class FirebaseHelper {
                     Message message = messageSnapshot.getValue(Message.class);
                     messageList.add(message);
                 }
-                listener.onPassMessage(messageList);
+                listener.onMessageRecieved(messageList);
             }
 
             @Override
@@ -74,7 +74,7 @@ public class FirebaseHelper {
 
     public interface FirebaseHelperListener {
 
-        void onPassMessage(ArrayList<Message> messages);
+        void onMessageRecieved(ArrayList<Message> messages);
 
         void onFailure(String error);
 
