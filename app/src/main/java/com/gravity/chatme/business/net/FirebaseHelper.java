@@ -12,12 +12,7 @@ public class FirebaseHelper {
     private DatabaseReference mDatabaseReference;
 
     public FirebaseHelper() {
-        FirebaseDatabase.getInstance().setPersistenceEnabled(false);
-        FirebaseDatabase.getInstance().goOnline();
         mDatabaseReference = FirebaseDatabase.getInstance().getReference();
-
-        //mDatabaseReference.keepSynced(false);
-
     }
 
     public void sendMessage(Message message, DatabaseReference.CompletionListener completionListener) {

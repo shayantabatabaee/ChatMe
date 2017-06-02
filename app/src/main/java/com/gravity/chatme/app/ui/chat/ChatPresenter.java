@@ -13,7 +13,7 @@ public class ChatPresenter implements ChatContract.Presenter {
 
     public ChatPresenter(ChatActivity chatActivity, GoogleApiClient.Builder builder) {
         this.view = chatActivity;
-        chatRepository = new ChatRepository(chatActivity.getApplicationContext(),builder);
+        chatRepository = new ChatRepository(chatActivity.getApplicationContext(), builder);
     }
 
     @Override
@@ -38,5 +38,10 @@ public class ChatPresenter implements ChatContract.Presenter {
 
             }
         });
+    }
+
+    @Override
+    public String getCurrentUser() {
+        return chatRepository.getCurrentUser().getDisplayName();
     }
 }

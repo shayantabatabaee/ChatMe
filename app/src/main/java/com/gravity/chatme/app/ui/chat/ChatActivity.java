@@ -56,11 +56,10 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
     private void initObjects() {
         messageList = new ArrayList<>();
         layoutManager = new LinearLayoutManager(this);
-        adapter = new RecyclerViewAdapter(messageList);
-
         mGoogleApiClientBuilder = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, null);
         presenter = new ChatPresenter(this, mGoogleApiClientBuilder);
+        adapter = new RecyclerViewAdapter(messageList, presenter.getCurrentUser());
     }
 
     @Override

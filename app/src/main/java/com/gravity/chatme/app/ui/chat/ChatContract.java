@@ -17,5 +17,7 @@ public interface ChatContract {
         void sendMessage(String messageContent);
 
         void retrieveMessage();
+
+        String getCurrentUser();
     }
 }

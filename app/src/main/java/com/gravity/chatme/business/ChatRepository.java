@@ -3,6 +3,7 @@ package com.gravity.chatme.business;
 import android.content.Context;
 
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.gravity.chatme.business.model.Message;
@@ -78,6 +79,10 @@ public class ChatRepository {
 
             }
         }, lastMessageTime);
+    }
+
+    public FirebaseUser getCurrentUser() {
+        return mAuthHelper.getCurrentUser();
     }
 
     public interface ChatRepositoryListener {
