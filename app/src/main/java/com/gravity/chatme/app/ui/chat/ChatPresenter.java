@@ -1,5 +1,6 @@
 package com.gravity.chatme.app.ui.chat;
 
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.gravity.chatme.business.ChatRepository;
 import com.gravity.chatme.business.model.Message;
 
@@ -10,9 +11,9 @@ public class ChatPresenter implements ChatContract.Presenter {
     private ChatContract.View view;
     private ChatRepository chatRepository;
 
-    public ChatPresenter(ChatActivity chatActivity) {
+    public ChatPresenter(ChatActivity chatActivity, GoogleApiClient.Builder builder) {
         this.view = chatActivity;
-        chatRepository = new ChatRepository(chatActivity.getApplicationContext());
+        chatRepository = new ChatRepository(chatActivity.getApplicationContext(),builder);
     }
 
     @Override

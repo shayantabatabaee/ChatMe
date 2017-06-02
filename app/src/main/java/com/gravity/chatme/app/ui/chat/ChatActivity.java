@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.gravity.chatme.R;
 import com.gravity.chatme.business.model.Message;
 
@@ -36,6 +37,9 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
 
     private ArrayList<Message> messageList;
 
+    private GoogleApiClient.Builder mGoogleApiClientBuilder;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,9 +55,12 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
 
     private void initObjects() {
         messageList = new ArrayList<>();
-        presenter = new ChatPresenter(this);
         layoutManager = new LinearLayoutManager(this);
         adapter = new RecyclerViewAdapter(messageList);
+
+        mGoogleApiClientBuilder = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, null);
+        presenter = new ChatPresenter(this, mGoogleApiClientBuilder);
     }
 
     @Override

@@ -2,7 +2,11 @@ package com.gravity.chatme.business;
 
 import android.content.Context;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.gravity.chatme.business.model.Message;
+import com.gravity.chatme.business.net.AuthHelper;
 import com.gravity.chatme.business.net.FirebaseHelper;
 import com.gravity.chatme.business.storage.database.ChatMeDatabase;
 import com.gravity.chatme.business.storage.database.MessageDao;
@@ -18,21 +22,28 @@ public class ChatRepository {
     private Context context;
     private MessageDao messageDao;
     private long lastMessageTime;
+    private AuthHelper mAuthHelper;
 
-    public ChatRepository(Context context) {
+    public ChatRepository(Context context, GoogleApiClient.Builder builder) {
         dbMessageList = new ArrayList<>();
         firebaseHelper = new FirebaseHelper();
         this.context = context;
         this.messageDao = ChatMeDatabase.getDatabase(context).messageDao();
+        mAuthHelper = AuthHelper.getInstance(builder);
     }
 
     public void addMessage(String messageContent) {
-        Message message = new Message();
-        message.setMessageUser("default");
+        final Message message = new Message();
+        message.setMessageUser(mAuthHelper.getCurrentUser().getDisplayName());
         message.setMessageTime(new Date().getTime());
         message.setMessageContent(messageContent);
         if (!message.getMessageContent().equals("")) {
-            firebaseHelper.sendMessage(message);
+            firebaseHelper.sendMessage(message, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    //messageDao.insertMessage(message);
+                }
+            });
         }
     }
 

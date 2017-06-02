@@ -12,12 +12,16 @@ public class FirebaseHelper {
     private DatabaseReference mDatabaseReference;
 
     public FirebaseHelper() {
+        FirebaseDatabase.getInstance().setPersistenceEnabled(false);
+        FirebaseDatabase.getInstance().goOnline();
         mDatabaseReference = FirebaseDatabase.getInstance().getReference();
+
+        //mDatabaseReference.keepSynced(false);
 
     }
 
-    public void sendMessage(Message message) {
-        mDatabaseReference.child("messages").push().setValue(message);
+    public void sendMessage(Message message, DatabaseReference.CompletionListener completionListener) {
+        mDatabaseReference.child("messages").push().setValue(message, completionListener);
     }
 
     public void retrieveMessage(final FirebaseHelperListener listener, Long messageTime) {

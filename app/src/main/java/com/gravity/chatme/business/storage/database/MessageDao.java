@@ -8,7 +8,7 @@ import com.gravity.chatme.business.model.Message;
 
 import java.util.List;
 
-import static android.arch.persistence.room.OnConflictStrategy.REPLACE;
+import static android.arch.persistence.room.OnConflictStrategy.IGNORE;
 
 
 @Dao
@@ -17,6 +17,6 @@ public interface MessageDao {
     @Query("SELECT * FROM message")
     List<Message> getAllMessages();
 
-    @Insert(onConflict = REPLACE)
+    @Insert(onConflict = IGNORE)
     void insertMessage(Message message);
 }
