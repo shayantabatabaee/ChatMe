@@ -3,16 +3,12 @@ package com.gravity.chatme.app.ui.signing;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.firebase.auth.FirebaseUser;
 import com.gravity.chatme.R;
 import com.gravity.chatme.app.ui.chat.ChatActivity;
 
@@ -21,12 +17,13 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 public class GoogleSignInActivity extends AppCompatActivity implements
-        View.OnClickListener, GoogleSignInContract.view, GoogleApiClient.OnConnectionFailedListener {
+        View.OnClickListener, GoogleSignInContract.view {
 
+    //Request Code
     private static final int RC_SIGN_IN = 9001;
+    //Presenter Object
     private GoogleSignInContract.presenter presenter;
-    private GoogleApiClient.Builder mGoogleApiClientBuilder;
-
+    //View Binding
     private Unbinder unbinder;
     @BindView(R.id.signInButton)
     SignInButton signInButton;
@@ -38,25 +35,22 @@ public class GoogleSignInActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_googlesignin);
 
-        unbinder = ButterKnife.bind(this);
+        initObject();
+
         signInButton.setOnClickListener(this);
-
-        mGoogleApiClientBuilder = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this);
-
-        presenter = new GoogleSignInPresenter(this, mGoogleApiClientBuilder);
-
     }
 
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
+    private void initObject() {
+        unbinder = ButterKnife.bind(this);
+        presenter = new GoogleSignInPresenter(this);
     }
+
 
     @Override
     protected void onStart() {
         super.onStart();
         presenter.checkSignedIn();
+
     }
 
     @Override
@@ -72,12 +66,13 @@ public class GoogleSignInActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void updateUI(FirebaseUser user) {
+    public void updateUI(boolean signedIn) {
 
-        if (user != null) {
+        if (signedIn) {
             signInButton.setVisibility(View.GONE);
             Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
             startActivity(intent);
+            finish();
 
         } else {
             signInButton.setVisibility(View.VISIBLE);

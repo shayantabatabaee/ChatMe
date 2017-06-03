@@ -2,8 +2,6 @@ package com.gravity.chatme.business;
 
 import android.content.Context;
 
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.gravity.chatme.business.model.Message;
@@ -17,20 +15,21 @@ import java.util.Date;
 
 public class ChatRepository {
 
-    private ArrayList<Message> finalMessageList;
+    //Message Lists
     private ArrayList<Message> dbMessageList;
     private FirebaseHelper firebaseHelper;
-    private Context context;
+    //Database Access Object
     private MessageDao messageDao;
+    //Last Message Time
     private long lastMessageTime;
+    //Authentication helper
     private AuthHelper mAuthHelper;
 
-    public ChatRepository(Context context, GoogleApiClient.Builder builder) {
+    public ChatRepository(Context context, AuthHelper authHelper) {
         dbMessageList = new ArrayList<>();
         firebaseHelper = new FirebaseHelper();
-        this.context = context;
+        this.mAuthHelper = authHelper;
         this.messageDao = ChatMeDatabase.getDatabase(context).messageDao();
-        mAuthHelper = AuthHelper.getInstance(builder);
     }
 
     public void addMessage(String messageContent) {
@@ -42,7 +41,7 @@ public class ChatRepository {
             firebaseHelper.sendMessage(message, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                    messageDao.insertMessage(message);
+                    //messageDao.insertMessage(message);
                 }
             });
         }
@@ -69,9 +68,10 @@ public class ChatRepository {
             @Override
             public void onMessageRecieved(Message message) {
                 listener.OnRetrieveFirebaseMessage(message);
-                if (!message.getMessageUser().equals(mAuthHelper.getCurrentUser().getDisplayName())) {
-                    messageDao.insertMessage(message);
-                }
+                /*if (!message.getMessageUser().equals(mAuthHelper.getCurrentUser().getDisplayName())) {
+
+                }*/
+                messageDao.insertMessage(message);
             }
 
 
@@ -81,10 +81,6 @@ public class ChatRepository {
 
             }
         }, lastMessageTime);
-    }
-
-    public FirebaseUser getCurrentUser() {
-        return mAuthHelper.getCurrentUser();
     }
 
     public interface ChatRepositoryListener {

@@ -12,12 +12,18 @@ import com.gravity.chatme.business.net.AuthHelper;
 
 public class GoogleSignInPresenter implements GoogleSignInContract.presenter, AuthHelper.AuthHelperListener {
 
+    //View Object
     private GoogleSignInContract.view view;
+    //Authentication Object
     private AuthHelper mAuthHelper;
+    //Request Code
     private static final int RC_SIGN_IN = 9001;
 
-    public GoogleSignInPresenter(GoogleSignInActivity view, GoogleApiClient.Builder builder) {
-        mAuthHelper = AuthHelper.getInstance(builder);
+    public GoogleSignInPresenter(GoogleSignInActivity view) {
+
+        GoogleApiClient.Builder mGoogleApiClientBuilder = new GoogleApiClient.Builder(view)
+                .enableAutoManage(view, null);
+        mAuthHelper = AuthHelper.getInstance(mGoogleApiClientBuilder);
         this.view = view;
     }
 
@@ -37,29 +43,34 @@ public class GoogleSignInPresenter implements GoogleSignInContract.presenter, Au
                 GoogleSignInAccount account = result.getSignInAccount();
                 mAuthHelper.firebaseAuthWithGoogle(account, this);
             } else {
-                view.updateUI(null);
+                view.updateUI(false);
             }
         }
     }
 
     @Override
-    public void SingOut() {
+    public void singOut() {
         mAuthHelper.signOut(this);
     }
 
     @Override
     public void checkSignedIn() {
-        view.updateUI(mAuthHelper.getCurrentUser());
+        FirebaseUser currentUser = mAuthHelper.getCurrentUser();
+        if (currentUser != null) {
+            view.updateUI(true);
+        } else {
+            view.updateUI(false);
+        }
     }
 
     @Override
-    public void onSignIn(FirebaseUser user) {
-        view.updateUI(user);
+    public void onSignIn() {
+        view.updateUI(true);
     }
 
     @Override
     public void onSignOut() {
-        view.updateUI(null);
+        view.updateUI(false);
     }
 
     @Override

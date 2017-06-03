@@ -9,6 +9,7 @@ import com.gravity.chatme.business.model.Message;
 
 public class FirebaseHelper {
 
+    //Database Reference Object
     private DatabaseReference mDatabaseReference;
 
     public FirebaseHelper() {

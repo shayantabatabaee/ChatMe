@@ -10,7 +10,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.gravity.chatme.R;
 import com.gravity.chatme.business.model.Message;
 
@@ -22,10 +21,9 @@ import butterknife.Unbinder;
 
 public class ChatActivity extends AppCompatActivity implements ChatContract.View, View.OnClickListener {
 
-    //MVP Objects
+    //Presenter Objects
     private ChatContract.Presenter presenter;
-
-    //ButterKnife Objects
+    //View Binding
     private Unbinder unbinder;
     @BindView(R.id.sendButton)
     ImageView sendButton;
@@ -35,43 +33,51 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
     RecyclerView recyclerView;
     @BindView(R.id.chatLinearLayout)
     LinearLayout linearLayout;
-
+    //RecyclerView Objects
     private LinearLayoutManager layoutManager;
     private RecyclerView.Adapter adapter;
-
+    //Message List Object
     private ArrayList<Message> messageList;
-
-    private GoogleApiClient.Builder mGoogleApiClientBuilder;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+
         initObjects();
-        unbinder = ButterKnife.bind(this);
+
+        messageSendingContent.setOnClickListener(this);
         sendButton.setOnClickListener(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         presenter.getWelcomeMessage();
         presenter.retrieveMessage();
-
     }
 
     private void initObjects() {
+        unbinder = ButterKnife.bind(this);
         messageList = new ArrayList<>();
         layoutManager = new LinearLayoutManager(this);
-        mGoogleApiClientBuilder = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, null);
-        presenter = new ChatPresenter(this, mGoogleApiClientBuilder);
+        presenter = new ChatPresenter(this);
+        //TODO:Fix presenter.getCurrentUser
         adapter = new RecyclerViewAdapter(messageList, presenter.getCurrentUser());
     }
 
     @Override
     public void onClick(View v) {
-        presenter.sendMessage(messageSendingContent.getText().toString());
-        messageSendingContent.setText("");
+        if (v.getId() == R.id.messageSendingContent) {
+            recyclerView.smoothScrollToPosition(adapter.getItemCount());
 
+        } else if (v.getId() == R.id.sendButton) {
+            presenter.sendMessage(messageSendingContent.getText().toString());
+            messageSendingContent.setText("");
+        }
     }
 
 
@@ -84,14 +90,14 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
     }
 
     @Override
-    public void showWelcomeMessage(String username) {
-        Snackbar.make(linearLayout, "Welcome dear " + username, Snackbar.LENGTH_LONG).show();
-    }
-
-    @Override
     public void displayMessages(ArrayList<Message> messages) {
         messageList.addAll(messages);
         adapter.notifyDataSetChanged();
         recyclerView.smoothScrollToPosition(adapter.getItemCount());
+    }
+
+    @Override
+    public void showWelcomeMessage(String welcomeMessage) {
+        Snackbar.make(linearLayout, welcomeMessage, Snackbar.LENGTH_LONG).show();
     }
 }

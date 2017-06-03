@@ -22,8 +22,11 @@ import com.gravity.chatme.app.ui.ChatApplication;
 
 public class AuthHelper {
 
+    //Firebase Authentication Object
     private FirebaseAuth mAuth;
+    //AutHelper instance
     private static AuthHelper sInstance;
+    //Google Api Client Object
     private GoogleApiClient mGoogleApiClient;
 
     public static AuthHelper getInstance(GoogleApiClient.Builder builder) {
@@ -46,9 +49,6 @@ public class AuthHelper {
         mGoogleApiClient = builder.addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
-             /*   .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();*/
-
         mAuth = FirebaseAuth.getInstance();
     }
 
@@ -59,8 +59,7 @@ public class AuthHelper {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    FirebaseUser user = mAuth.getCurrentUser();
-                    listener.onSignIn(user);
+                    listener.onSignIn();
                 } else {
                     listener.onFailed();
                 }
@@ -80,7 +79,6 @@ public class AuthHelper {
     public void signOut(final AuthHelperListener listener) {
         mAuth.signOut();
 
-
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
             @Override
             public void onResult(@NonNull Status status) {
@@ -91,7 +89,7 @@ public class AuthHelper {
 
     public interface AuthHelperListener {
 
-        void onSignIn(FirebaseUser user);
+        void onSignIn();
 
         void onSignOut();
 
