@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="rounded_corner_radius">15dip</dimen>
-    <dimen name="rounded_corner_padding">5dp</dimen>
     <dimen name="recycler_view_padding">10dp</dimen>
     <dimen name="message_text_view_margin_bottom">3dp</dimen>
     <dimen name="message_view_margin_bottom">5dp</dimen>
@@ -9,4 +7,11 @@
     <dimen name="message_text_view_margin_top">3dp</dimen>
     <dimen name="sign_in_linear_layout_margin_lr">40dp</dimen>
     <dimen name="sign_in_linear_layout_margin_tb">110dp</dimen>
+
+    <dimen name="nav_header_vertical_spacing">16dp</dimen>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="nav_header_height">160dp</dimen>
+    <dimen name="profile_width">75dp</dimen>
+    <dimen name="profile_height">75dp</dimen>
 </resources>

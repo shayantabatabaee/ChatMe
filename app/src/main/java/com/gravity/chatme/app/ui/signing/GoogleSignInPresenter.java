@@ -19,11 +19,8 @@ public class GoogleSignInPresenter implements GoogleSignInContract.presenter, Au
     //Request Code
     private static final int RC_SIGN_IN = 9001;
 
-    public GoogleSignInPresenter(GoogleSignInActivity view) {
-
-        GoogleApiClient.Builder mGoogleApiClientBuilder = new GoogleApiClient.Builder(view)
-                .enableAutoManage(view, null);
-        mAuthHelper = AuthHelper.getInstance(mGoogleApiClientBuilder);
+    public GoogleSignInPresenter(GoogleSignInActivity view,GoogleApiClient.Builder builder) {
+        mAuthHelper = AuthHelper.getInstance(builder);
         this.view = view;
     }
 

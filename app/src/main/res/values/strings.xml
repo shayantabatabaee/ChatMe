@@ -4,4 +4,12 @@
     <string name="SignOut">Sign Out</string>
     <string name="signIn_text">Please press sign in button to enter group chat.</string>
     <string name="signIn">Sign In</string>
+    <string name="nav_sign_out">Sign Out</string>
+    <string name="nav_about_us">About Us</string>
+    <string name="openDrawer">open_drawer</string>
+    <string name="closeDrawer">close_drawer</string>
+    <string-array name="nav_item_titles">
+        <item>Sign Out</item>
+        <item>About Us</item>
+    </string-array>
 </resources>

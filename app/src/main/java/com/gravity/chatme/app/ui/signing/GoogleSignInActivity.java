@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.gravity.chatme.R;
 import com.gravity.chatme.app.ui.chat.ChatActivity;
 
@@ -42,7 +43,9 @@ public class GoogleSignInActivity extends AppCompatActivity implements
 
     private void initObject() {
         unbinder = ButterKnife.bind(this);
-        presenter = new GoogleSignInPresenter(this);
+        GoogleApiClient.Builder mGoogleApiClientBuilder = new GoogleApiClient.Builder(getApplicationContext())
+                .enableAutoManage(this, null);
+        presenter = new GoogleSignInPresenter(this, mGoogleApiClientBuilder);
     }
 
 

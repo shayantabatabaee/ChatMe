@@ -13,9 +13,15 @@ public interface ChatContract {
         void displayMessage(Message message);
 
         void showWelcomeMessage(String username);
+
+        void loadNavHeader(String username, String email, String urlProfileImg);
+
+        void startActivity();
     }
 
     interface Presenter {
+
+        void getNavHeader();
 
         void sendMessage(String messageContent);
 
@@ -24,5 +30,9 @@ public interface ChatContract {
         void getWelcomeMessage();
 
         String getCurrentUser();
+
+        void signOut();
+
+
     }
 }

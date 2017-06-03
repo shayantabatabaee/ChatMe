@@ -30,11 +30,7 @@ public class AuthHelper {
     private GoogleApiClient mGoogleApiClient;
 
     public static AuthHelper getInstance(GoogleApiClient.Builder builder) {
-        if (sInstance == null) {
-            sInstance = new AuthHelper(builder);
-        }
-
-        return sInstance;
+        return new AuthHelper(builder);
     }
 
     private AuthHelper(GoogleApiClient.Builder builder) {

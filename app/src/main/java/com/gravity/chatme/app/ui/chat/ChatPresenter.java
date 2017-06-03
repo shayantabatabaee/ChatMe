@@ -16,11 +16,9 @@ public class ChatPresenter implements ChatContract.Presenter {
     //Authentication helper
     private AuthHelper mAuthHelper;
 
-    public ChatPresenter(ChatActivity view) {
+    public ChatPresenter(ChatActivity view,GoogleApiClient.Builder builder) {
         this.view = view;
-        GoogleApiClient.Builder mGoogleApiClientBuilder = new GoogleApiClient.Builder(view)
-                .enableAutoManage(view, null);
-        mAuthHelper = AuthHelper.getInstance(mGoogleApiClientBuilder);
+        mAuthHelper = AuthHelper.getInstance(builder);
         chatRepository = new ChatRepository(view.getApplicationContext(), mAuthHelper);
     }
 
@@ -46,6 +44,33 @@ public class ChatPresenter implements ChatContract.Presenter {
 
             }
         });
+    }
+
+    @Override
+    public void signOut() {
+        mAuthHelper.signOut(new AuthHelper.AuthHelperListener() {
+            @Override
+            public void onSignOut() {
+                view.startActivity();
+            }
+
+            @Override
+            public void onSignIn() {
+
+            }
+
+            @Override
+            public void onFailed() {
+
+            }
+        });
+    }
+
+    @Override
+    public void getNavHeader() {
+        view.loadNavHeader(mAuthHelper.getCurrentUser().getDisplayName(),
+                mAuthHelper.getCurrentUser().getEmail(),
+                mAuthHelper.getCurrentUser().getPhotoUrl().toString());
     }
 
     @Override
