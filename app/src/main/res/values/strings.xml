@@ -2,4 +2,6 @@
     <string name="app_name">ChatMe</string>
     <string name="message_area_text">Write a message . . . </string>
     <string name="SignOut">Sign Out</string>
+    <string name="signIn_text">Please press sign in button to enter group chat.</string>
+    <string name="signIn">Sign In</string>
 </resources>

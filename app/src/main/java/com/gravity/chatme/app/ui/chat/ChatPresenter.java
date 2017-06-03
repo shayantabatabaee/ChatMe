@@ -41,6 +41,11 @@ public class ChatPresenter implements ChatContract.Presenter {
     }
 
     @Override
+    public void getWelcomeMessage() {
+        view.showWelcomeMessage(getCurrentUser());
+    }
+
+    @Override
     public String getCurrentUser() {
         return chatRepository.getCurrentUser().getDisplayName();
     }

@@ -10,6 +10,8 @@ public interface ChatContract {
         void displayMessages(ArrayList<Message> messages);
 
         void displayMessage(Message message);
+
+        void showWelcomeMessage(String username);
     }
 
     interface Presenter {
@@ -17,6 +19,8 @@ public interface ChatContract {
         void sendMessage(String messageContent);
 
         void retrieveMessage();
+
+        void getWelcomeMessage();
 
         String getCurrentUser();
     }

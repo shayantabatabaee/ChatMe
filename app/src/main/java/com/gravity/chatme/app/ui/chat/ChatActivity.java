@@ -1,12 +1,14 @@
 package com.gravity.chatme.app.ui.chat;
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.gravity.chatme.R;
@@ -31,6 +33,8 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
     EditText messageSendingContent;
     @BindView(R.id.messageRecyclerView)
     RecyclerView recyclerView;
+    @BindView(R.id.chatLinearLayout)
+    LinearLayout linearLayout;
 
     private LinearLayoutManager layoutManager;
     private RecyclerView.Adapter adapter;
@@ -49,6 +53,7 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
         sendButton.setOnClickListener(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+        presenter.getWelcomeMessage();
         presenter.retrieveMessage();
 
     }
@@ -76,6 +81,11 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
         adapter.notifyDataSetChanged();
         recyclerView.smoothScrollToPosition(adapter.getItemCount());
 
+    }
+
+    @Override
+    public void showWelcomeMessage(String username) {
+        Snackbar.make(linearLayout, "Welcome dear " + username, Snackbar.LENGTH_LONG).show();
     }
 
     @Override

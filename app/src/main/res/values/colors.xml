@@ -7,4 +7,5 @@
     <color name="colorSecondaryText">#757575</color>
     <color name="colorDivider">#BDBDBD</color>
     <color name="colorAccent">#9E9E9E</color>
+    <color name="colorSignInActivityBackground">#2B2B2B</color>
 </resources>

@@ -42,7 +42,7 @@ public class ChatRepository {
             firebaseHelper.sendMessage(message, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                    //messageDao.insertMessage(message);
+                    messageDao.insertMessage(message);
                 }
             });
         }
@@ -69,7 +69,9 @@ public class ChatRepository {
             @Override
             public void onMessageRecieved(Message message) {
                 listener.OnRetrieveFirebaseMessage(message);
-                messageDao.insertMessage(message);
+                if (!message.getMessageUser().equals(mAuthHelper.getCurrentUser().getDisplayName())) {
+                    messageDao.insertMessage(message);
+                }
             }
 
 
