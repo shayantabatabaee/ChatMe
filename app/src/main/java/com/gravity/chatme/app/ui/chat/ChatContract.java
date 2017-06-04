@@ -25,7 +25,9 @@ public interface ChatContract {
 
         void sendMessage(String messageContent);
 
-        void retrieveMessage();
+        void retrieveLocalMessage();
+
+        void fetchRemoteMessage();
 
         void getWelcomeMessage();
 

@@ -11,10 +11,20 @@ public class FirebaseHelper {
 
     //Database Reference Object
     private DatabaseReference mDatabaseReference;
+    //Instance Object
+    private static FirebaseHelper sInstance;
 
-    public FirebaseHelper() {
+    public static FirebaseHelper getInstance() {
+        if (sInstance == null) {
+            sInstance = new FirebaseHelper();
+        }
+        return sInstance;
+    }
+
+    private FirebaseHelper() {
         mDatabaseReference = FirebaseDatabase.getInstance().getReference();
     }
+
 
     public void sendMessage(Message message, DatabaseReference.CompletionListener completionListener) {
         mDatabaseReference.child("messages").push().setValue(message, completionListener);
@@ -49,15 +59,13 @@ public class FirebaseHelper {
             }
         });
 
-        /*mDatabaseReference.child("messages").orderByChild("messageTime").startAt(messageTime+1).addValueEventListener(new ValueEventListener() {
+        /*mDatabaseReference.child("messages").orderByChild("messageTime").startAt(messageTime + 1).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                messageList = new ArrayList<>();
                 for (DataSnapshot messageSnapshot : dataSnapshot.getChildren()) {
                     Message message = messageSnapshot.getValue(Message.class);
-                    messageList.add(message);
+                    listener.onMessageRecieved(message);
                 }
-                listener.onMessageRecieved(messageList);
             }
 
             @Override

@@ -71,7 +71,6 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
         toolbar = (Toolbar) findViewById(R.id.nav_toolbar);
         setSupportActionBar(toolbar);
 
-
         initObjects();
 
         setUpNavigationView();
@@ -80,11 +79,14 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
         txtEmail = (TextView) navHeader.findViewById(R.id.email);
         imgProfile = (ImageView) navHeader.findViewById(R.id.img_profile);
 
-
         messageSendingContent.setOnClickListener(this);
         sendButton.setOnClickListener(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+
+        presenter.retrieveLocalMessage();
+        presenter.fetchRemoteMessage();
+
     }
 
     @Override
@@ -92,8 +94,9 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
         super.onStart();
         presenter.getNavHeader();
         presenter.getWelcomeMessage();
-        presenter.retrieveMessage();
+
     }
+
 
     private void initObjects() {
         unbinder = ButterKnife.bind(this);

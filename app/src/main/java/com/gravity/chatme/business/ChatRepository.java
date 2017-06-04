@@ -15,8 +15,6 @@ import java.util.Date;
 
 public class ChatRepository {
 
-    //Message Lists
-    private ArrayList<Message> dbMessageList;
     private FirebaseHelper firebaseHelper;
     //Database Access Object
     private MessageDao messageDao;
@@ -26,8 +24,7 @@ public class ChatRepository {
     private AuthHelper mAuthHelper;
 
     public ChatRepository(Context context, AuthHelper authHelper) {
-        dbMessageList = new ArrayList<>();
-        firebaseHelper = new FirebaseHelper();
+        firebaseHelper = FirebaseHelper.getInstance();
         this.mAuthHelper = authHelper;
         this.messageDao = ChatMeDatabase.getDatabase(context).messageDao();
     }
@@ -47,13 +44,9 @@ public class ChatRepository {
         }
     }
 
-    public void retrieveMessage(final ChatRepositoryListener listener) {
-        retrieveDBMessage(listener);
-        fetchFirebaseMessage(listener);
-    }
 
-
-    private void retrieveDBMessage(ChatRepositoryListener listener) {
+    public void retrieveDBMessage(ChatRepositoryListener.DbListener listener) {
+        ArrayList<Message> dbMessageList = new ArrayList<>();
         dbMessageList.addAll(messageDao.getAllMessages());
         if (!dbMessageList.isEmpty()) {
             lastMessageTime = dbMessageList.get(dbMessageList.size() - 1).getMessageTime();
@@ -62,7 +55,7 @@ public class ChatRepository {
 
     }
 
-    private void fetchFirebaseMessage(final ChatRepositoryListener listener) {
+    public void fetchRemoteMessage(final ChatRepositoryListener.FirebaseListener listener) {
         firebaseHelper.retrieveMessage(new FirebaseHelper.FirebaseHelperListener() {
 
             @Override
@@ -77,18 +70,21 @@ public class ChatRepository {
 
             @Override
             public void onFailure(String error) {
-
-
+                listener.onFailure(error);
             }
         }, lastMessageTime);
     }
 
     public interface ChatRepositoryListener {
 
-        void onRetrieveDBMessage(ArrayList<Message> messages);
+        interface DbListener {
+            void onRetrieveDBMessage(ArrayList<Message> messages);
+        }
 
-        void OnRetrieveFirebaseMessage(Message message);
+        interface FirebaseListener {
+            void OnRetrieveFirebaseMessage(Message message);
 
-        void onFailure(String message);
+            void onFailure(String message);
+        }
     }
 }

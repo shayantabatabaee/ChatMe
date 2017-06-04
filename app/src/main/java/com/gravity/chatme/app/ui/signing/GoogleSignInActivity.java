@@ -72,6 +72,7 @@ public class GoogleSignInActivity extends AppCompatActivity implements
     public void updateUI(boolean signedIn) {
 
         if (signedIn) {
+
             signInButton.setVisibility(View.GONE);
             Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
             startActivity(intent);

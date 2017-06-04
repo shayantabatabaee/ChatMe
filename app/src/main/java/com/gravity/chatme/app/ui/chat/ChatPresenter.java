@@ -16,7 +16,7 @@ public class ChatPresenter implements ChatContract.Presenter {
     //Authentication helper
     private AuthHelper mAuthHelper;
 
-    public ChatPresenter(ChatActivity view,GoogleApiClient.Builder builder) {
+    public ChatPresenter(ChatActivity view, GoogleApiClient.Builder builder) {
         this.view = view;
         mAuthHelper = AuthHelper.getInstance(builder);
         chatRepository = new ChatRepository(view.getApplicationContext(), mAuthHelper);
@@ -28,15 +28,21 @@ public class ChatPresenter implements ChatContract.Presenter {
     }
 
     @Override
-    public void retrieveMessage() {
-        chatRepository.retrieveMessage(new ChatRepository.ChatRepositoryListener() {
+    public void retrieveLocalMessage() {
+        chatRepository.retrieveDBMessage(new ChatRepository.ChatRepositoryListener.DbListener() {
+            @Override
+            public void onRetrieveDBMessage(ArrayList<Message> messages) {
+                view.displayMessages(messages);
+            }
+        });
+    }
+
+    @Override
+    public void fetchRemoteMessage() {
+        chatRepository.fetchRemoteMessage(new ChatRepository.ChatRepositoryListener.FirebaseListener() {
             @Override
             public void OnRetrieveFirebaseMessage(Message message) {
                 view.displayMessage(message);
-            }
-
-            public void onRetrieveDBMessage(ArrayList<Message> messages) {
-                view.displayMessages(messages);
             }
 
             @Override

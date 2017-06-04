@@ -24,6 +24,13 @@
         <activity
             android:name=".app.ui.chat.ChatActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <service android:name=".app.ui.FCMService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+
+        </service>
     </application>
 
 </manifest>
