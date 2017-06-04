@@ -5,9 +5,9 @@ android {
     signingConfigs {
         config {
             keyAlias 'chatme'
-            keyPassword 'fi khl onh'
+            keyPassword 'fikhlonh'
             storeFile file('../key/chatme.keystore')
-            storePassword 'fi khl onh'
+            storePassword 'fikhlonh'
         }
     }
     compileSdkVersion 25

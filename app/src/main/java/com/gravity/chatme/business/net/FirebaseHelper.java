@@ -6,6 +6,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.gravity.chatme.business.model.Message;
+import com.gravity.chatme.business.model.User;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class FirebaseHelper {
 
@@ -28,6 +32,24 @@ public class FirebaseHelper {
 
     public void sendMessage(Message message, DatabaseReference.CompletionListener completionListener) {
         mDatabaseReference.child("messages").push().setValue(message, completionListener);
+    }
+
+    public void sendUser(String username, String token) {
+        User user = new User(token);
+        mDatabaseReference.child("users").child(username).setValue(user);
+    }
+
+    public void updateUserToken(String username, String token) {
+        User user = new User(token);
+        Map<String, Object> userValue = user.toMap();
+
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put("/users/" + username, userValue);
+        mDatabaseReference.updateChildren(childUpdates);
+    }
+
+    public void removeUser(String username) {
+        mDatabaseReference.child("users").child(username).removeValue();
     }
 
     public void retrieveMessage(final FirebaseHelperListener listener, Long messageTime) {

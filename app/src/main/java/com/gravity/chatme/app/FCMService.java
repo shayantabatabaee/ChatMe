@@ -1,4 +1,4 @@
-package com.gravity.chatme.app.ui;
+package com.gravity.chatme.app;
 
 import android.util.Log;
 
