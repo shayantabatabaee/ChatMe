@@ -17,7 +17,7 @@ public class CircleTransform extends BitmapTransformation {
 
     @Override
     protected Bitmap transform(BitmapPool pool, Bitmap toTransform, int outWidth, int outHeight) {
-        return null;
+        return circleCrop(pool, toTransform);
     }
 
     private static Bitmap circleCrop(BitmapPool pool, Bitmap source) {

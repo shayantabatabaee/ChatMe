@@ -71,8 +71,8 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
         toolbar = (Toolbar) findViewById(R.id.nav_toolbar);
         setSupportActionBar(toolbar);
 
-        initObjects();
 
+        initObjects();
 
         setUpNavigationView();
 
@@ -149,10 +149,10 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
         txtUsername.setText(username);
         txtEmail.setText(email);
         //TODO:Read From DB
-        Glide.with(this).load(urlProfileImg)
+        Glide.with(getApplicationContext()).load(urlProfileImg)
                 .crossFade()
+                .bitmapTransform(new CircleTransform(getApplicationContext()))
                 .thumbnail(0.5f)
-                .bitmapTransform(new CircleTransform(this))
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(imgProfile);
     }

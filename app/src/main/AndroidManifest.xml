@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.gravity.chatme">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".app.ui.ChatApplication"
         android:allowBackup="true"
@@ -21,7 +23,7 @@
 
         <activity
             android:name=".app.ui.chat.ChatActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>
