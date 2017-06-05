@@ -3,6 +3,7 @@
     package="com.gravity.chatme">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:name=".app.ChatApplication"
@@ -25,14 +26,14 @@
             android:name=".app.ui.chat.ChatActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <service android:name=".app.FCMService">
+        <service android:name=".app.firebase.FCMService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
 
         </service>
 
-        <service android:name=".app.InstanceIdService">
+        <service android:name=".app.firebase.InstanceIdService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>

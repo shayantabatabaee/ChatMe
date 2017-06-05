@@ -22,6 +22,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.gravity.chatme.R;
+import com.gravity.chatme.app.ChatApplication;
 import com.gravity.chatme.app.ui.signing.GoogleSignInActivity;
 import com.gravity.chatme.business.model.Message;
 import com.gravity.chatme.util.CircleTransform;
@@ -94,9 +95,14 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
         super.onStart();
         presenter.getNavHeader();
         presenter.getWelcomeMessage();
-
+        ChatApplication.isInBackground = false;
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ChatApplication.isInBackground = true;
+    }
 
     private void initObjects() {
         unbinder = ButterKnife.bind(this);

@@ -1,4 +1,4 @@
-package com.gravity.chatme.app;
+package com.gravity.chatme.app.firebase;
 
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -13,7 +13,7 @@ public class InstanceIdService extends FirebaseInstanceIdService {
         String refreshToken = FirebaseInstanceId.getInstance().getToken();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
-            FirebaseHelper.getInstance().updateUserToken(user.getDisplayName(), refreshToken);
+            FirebaseHelper.getInstance().updateUserToken(user.getDisplayName(),user.getPhotoUrl().toString(), refreshToken);
         }
     }
 }

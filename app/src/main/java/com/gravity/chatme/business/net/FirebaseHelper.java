@@ -34,13 +34,13 @@ public class FirebaseHelper {
         mDatabaseReference.child("messages").push().setValue(message, completionListener);
     }
 
-    public void addUser(String username, String token) {
-        User user = new User(token);
+    public void addUser(String username, String userImgUrl, String token) {
+        User user = new User(token, userImgUrl);
         mDatabaseReference.child("users").child(username).setValue(user);
     }
 
-    public void updateUserToken(String username, String token) {
-        User user = new User(token);
+    public void updateUserToken(String username, String userImgUrl, String token) {
+        User user = new User(token, userImgUrl);
         Map<String, Object> userValue = user.toMap();
 
         Map<String, Object> childUpdates = new HashMap<>();

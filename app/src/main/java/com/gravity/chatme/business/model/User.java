@@ -10,11 +10,18 @@ public class User {
 
     private String userToken;
 
+    private String userImgUrl;
+
     public User() {
     }
 
-    public User(String userToken) {
+    public User(String userToken, String userImgUrl) {
         this.userToken = userToken;
+        this.userImgUrl = userImgUrl;
+    }
+
+    public String getUserImgUrl() {
+        return userImgUrl;
     }
 
     public String getUserToken() {
@@ -24,6 +31,7 @@ public class User {
     @Exclude
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
+        result.put("userImgUrl", userImgUrl);
         result.put("userToken", userToken);
         return result;
     }
