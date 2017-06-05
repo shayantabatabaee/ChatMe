@@ -58,7 +58,7 @@ public class AuthHelper {
                 if (task.isSuccessful()) {
                     listener.onSignIn();
                     FirebaseUser user = mAuth.getCurrentUser();
-                    FirebaseHelper.getInstance().sendUser(user.getDisplayName()
+                    FirebaseHelper.getInstance().addUser(user.getDisplayName()
                             , FirebaseInstanceId.getInstance().getToken());
                 } else {
                     listener.onFailed();
@@ -68,12 +68,12 @@ public class AuthHelper {
     }
 
 
-    public FirebaseUser getCurrentUser() {
-        return mAuth.getCurrentUser();
-    }
-
     public Intent getSignInIntent() {
         return Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+    }
+
+    public FirebaseUser getCurrentUser() {
+        return mAuth.getCurrentUser();
     }
 
     public void signOut(final AuthHelperListener listener) {
@@ -86,6 +86,10 @@ public class AuthHelper {
                 listener.onSignOut();
             }
         });
+    }
+
+    public boolean checkSignIn() {
+        return mAuth.getCurrentUser() != null;
     }
 
     public interface AuthHelperListener {

@@ -7,8 +7,9 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.gravity.chatme.business.net.AuthHelper;
+import com.gravity.chatme.business.net.FirebaseHelper;
 
 public class GoogleSignInPresenter implements GoogleSignInContract.presenter, AuthHelper.AuthHelperListener {
 
@@ -52,8 +53,10 @@ public class GoogleSignInPresenter implements GoogleSignInContract.presenter, Au
 
     @Override
     public void checkSignedIn() {
-        FirebaseUser currentUser = mAuthHelper.getCurrentUser();
-        if (currentUser != null) {
+
+        if (mAuthHelper.checkSignIn()) {
+            FirebaseHelper.getInstance().updateUserToken(mAuthHelper.getCurrentUser().getDisplayName(),
+                    FirebaseInstanceId.getInstance().getToken());
             view.updateUI(true);
         } else {
             view.updateUI(false);

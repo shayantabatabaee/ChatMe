@@ -34,7 +34,7 @@ public class FirebaseHelper {
         mDatabaseReference.child("messages").push().setValue(message, completionListener);
     }
 
-    public void sendUser(String username, String token) {
+    public void addUser(String username, String token) {
         User user = new User(token);
         mDatabaseReference.child("users").child(username).setValue(user);
     }
