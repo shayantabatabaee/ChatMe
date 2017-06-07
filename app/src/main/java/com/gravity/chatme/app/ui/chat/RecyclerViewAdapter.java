@@ -37,11 +37,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) messageLayout.getLayoutParams();
 
             if (messageUsername.equals(userName)) {
-                messageLayout.setBackgroundResource(R.drawable.msg_in);
-                layoutParams.gravity = Gravity.LEFT;
+                messageLayout.setBackgroundResource(R.drawable.msg_out_new);
+                layoutParams.gravity = Gravity.END;
+                messageLayout.setGravity(Gravity.END);
+                messageContent.setGravity(Gravity.END);
             } else {
-                layoutParams.gravity = Gravity.RIGHT;
-                messageLayout.setBackgroundResource(R.drawable.msg_out);
+                messageLayout.setBackgroundResource(R.drawable.msg_in);
+                layoutParams.gravity = Gravity.START;
+                messageLayout.setGravity(Gravity.START);
+                messageContent.setGravity(Gravity.START);
             }
         }
     }

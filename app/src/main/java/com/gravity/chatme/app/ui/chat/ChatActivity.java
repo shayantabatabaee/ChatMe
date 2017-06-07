@@ -87,6 +87,7 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
 
         presenter.retrieveLocalMessage();
         presenter.fetchRemoteMessage();
+        presenter.getWelcomeMessage();
 
     }
 
@@ -94,7 +95,6 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
     protected void onStart() {
         super.onStart();
         presenter.getNavHeader();
-        presenter.getWelcomeMessage();
         ChatApplication.isInBackground = false;
     }
 

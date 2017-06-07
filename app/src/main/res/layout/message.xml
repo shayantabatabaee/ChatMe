@@ -18,8 +18,6 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/message_text_view_margin_bottom"
             android:layout_marginEnd="@dimen/message_layout_margin"
-            android:layout_marginLeft="@dimen/message_layout_margin"
-            android:layout_marginRight="@dimen/message_layout_margin"
             android:layout_marginStart="@dimen/message_layout_margin"
             android:layout_marginTop="@dimen/message_text_view_margin_top"
             android:textStyle="normal|bold" />
@@ -30,10 +28,9 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/message_text_view_margin_bottom"
             android:layout_marginEnd="@dimen/message_layout_margin"
-            android:layout_marginLeft="@dimen/message_layout_margin"
-            android:layout_marginRight="@dimen/message_layout_margin"
             android:layout_marginStart="@dimen/message_layout_margin"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:maxEms="10"
             android:textSize="18sp" />
     </LinearLayout>
 
