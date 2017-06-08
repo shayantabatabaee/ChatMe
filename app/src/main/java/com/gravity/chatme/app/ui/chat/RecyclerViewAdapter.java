@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.gravity.chatme.R;
 import com.gravity.chatme.business.model.Message;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
@@ -23,12 +24,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         public TextView messageUser;
         public TextView messageContent;
+        public TextView messageTIme;
         View itemView;
 
         public ViewHolder(View itemView) {
             super(itemView);
             messageUser = (TextView) itemView.findViewById(R.id.messageUser);
             messageContent = (TextView) itemView.findViewById(R.id.messageContent);
+            messageTIme = (TextView) itemView.findViewById(R.id.messageTime);
             this.itemView = itemView;
         }
 
@@ -67,6 +70,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
         viewHolder.messageContent.setText(mMessageList.get(i).getMessageContent());
         viewHolder.messageUser.setText(mMessageList.get(i).getMessageUser());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm a");
+        viewHolder.messageTIme.setText(simpleDateFormat.format(mMessageList.get(i).getMessageTime()));
         viewHolder.setPosition(mMessageList.get(i).getMessageUser(), userName);
 
     }

@@ -29,6 +29,8 @@ public interface ChatContract {
 
         void fetchRemoteMessage();
 
+        void getOnScrolledMessages(long firstMessageTime);
+
         void getWelcomeMessage();
 
         String getCurrentUser();

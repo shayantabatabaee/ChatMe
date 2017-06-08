@@ -53,6 +53,16 @@ public class ChatPresenter implements ChatContract.Presenter {
     }
 
     @Override
+    public void getOnScrolledMessages(long firstMessageTime) {
+        chatRepository.retrieveOnScrolledMessages(firstMessageTime, new ChatRepository.ChatRepositoryListener.DbListener() {
+            @Override
+            public void onRetrieveDBMessage(ArrayList<Message> messages) {
+                view.displayMessages(messages);
+            }
+        });
+    }
+
+    @Override
     public void signOut() {
         mAuthHelper.signOut(new AuthHelper.AuthHelperListener() {
             @Override

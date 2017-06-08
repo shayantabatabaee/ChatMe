@@ -85,6 +85,17 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (!recyclerView.canScrollVertically(-1) && (dy < 0)) {
+                    long firstMessageTime = messageList.get(0).getMessageTime();
+                    presenter.getOnScrolledMessages(firstMessageTime);
+                }
+            }
+        });
+
         presenter.retrieveLocalMessage();
         presenter.fetchRemoteMessage();
         presenter.getWelcomeMessage();
@@ -194,9 +205,10 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
 
     @Override
     public void displayMessages(ArrayList<Message> messages) {
-        messageList.addAll(messages);
+        messageList.addAll(0, messages);
         adapter.notifyDataSetChanged();
-        recyclerView.smoothScrollToPosition(adapter.getItemCount());
+        recyclerView.scrollToPosition(15);
+        //recyclerView.smoothScrollToPosition(adapter.getItemCount());
     }
 
     @Override

@@ -11,6 +11,7 @@ import com.gravity.chatme.business.storage.database.ChatMeDatabase;
 import com.gravity.chatme.business.storage.database.MessageDao;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 
 public class ChatRepository {
@@ -48,9 +49,22 @@ public class ChatRepository {
     public void retrieveDBMessage(ChatRepositoryListener.DbListener listener) {
         ArrayList<Message> dbMessageList = new ArrayList<>();
         dbMessageList.addAll(messageDao.getAllMessages());
+        Collections.reverse(dbMessageList);
         if (!dbMessageList.isEmpty()) {
             lastMessageTime = dbMessageList.get(dbMessageList.size() - 1).getMessageTime();
             listener.onRetrieveDBMessage(dbMessageList);
+        }
+
+    }
+
+    public void retrieveOnScrolledMessages(long firstMessageTime,ChatRepositoryListener.DbListener listener){
+        ArrayList<Message> scrolledMessages = new ArrayList<>();
+        scrolledMessages.addAll(messageDao.getOnScrolledMessages(firstMessageTime));
+        Collections.reverse(scrolledMessages);
+
+        if(!scrolledMessages.isEmpty())
+        {
+            listener.onRetrieveDBMessage(scrolledMessages);
         }
 
     }

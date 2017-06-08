@@ -17,6 +17,8 @@ public class FirebaseHelper {
     private DatabaseReference mDatabaseReference;
     //Instance Object
     private static FirebaseHelper sInstance;
+    //Primary Key
+    private String primaryKey;
 
     public static FirebaseHelper getInstance() {
         if (sInstance == null) {
@@ -31,7 +33,9 @@ public class FirebaseHelper {
 
 
     public void sendMessage(Message message, DatabaseReference.CompletionListener completionListener) {
-        mDatabaseReference.child("messages").push().setValue(message, completionListener);
+        primaryKey = mDatabaseReference.child("messages").push().getKey();
+        message.setUid(primaryKey);
+        mDatabaseReference.child("messages").child(primaryKey).setValue(message, completionListener);
     }
 
     public void addUser(String username, String userImgUrl, String token) {

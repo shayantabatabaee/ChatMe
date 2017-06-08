@@ -14,8 +14,11 @@ import static android.arch.persistence.room.OnConflictStrategy.IGNORE;
 @Dao
 public interface MessageDao {
 
-    @Query("SELECT * FROM message")
+    @Query("SELECT * FROM message ORDER BY message_time DESC LIMIT 10")
     List<Message> getAllMessages();
+
+    @Query("SELECT * FROM message WHERE message_time < :messageTime ORDER BY message_time DESC LIMIT 10")
+    List<Message> getOnScrolledMessages(long messageTime);
 
     @Insert(onConflict = IGNORE)
     void insertMessage(Message message);

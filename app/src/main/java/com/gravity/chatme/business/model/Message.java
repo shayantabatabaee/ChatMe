@@ -8,14 +8,29 @@ import android.arch.persistence.room.PrimaryKey;
 public class Message {
 
     @PrimaryKey
-    private Long messageTime;
+    private String uid;
 
+    @ColumnInfo(name = "message_time")
+    private Long messageTime;
     @ColumnInfo(name = "message_content")
     private String messageContent;
     @ColumnInfo(name = "message_user")
     private String messageUser;
+
     public Message() {
 
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public Long getMessageTime() {
+        return messageTime;
     }
 
     public void setMessageTime(Long messageTime) {
@@ -28,10 +43,6 @@ public class Message {
 
     public void setMessageContent(String messageContent) {
         this.messageContent = messageContent;
-    }
-
-    public Long getMessageTime() {
-        return messageTime;
     }
 
     public String getMessageUser() {
