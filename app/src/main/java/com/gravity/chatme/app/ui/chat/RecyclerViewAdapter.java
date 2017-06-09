@@ -40,17 +40,23 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) messageLayout.getLayoutParams();
 
             if (messageUsername.equals(userName)) {
-                messageLayout.setBackgroundResource(R.drawable.msg_out_new);
+                messageLayout.setBackgroundResource(R.drawable.msg_out);
                 layoutParams.gravity = Gravity.END;
                 messageLayout.setGravity(Gravity.END);
                 messageContent.setGravity(Gravity.END);
                 messageTIme.setGravity(Gravity.START);
+                messageUser.setTextColor(itemView.getResources().getColor(R.color.white));
+                messageContent.setTextColor(itemView.getResources().getColor(R.color.white));
+                messageTIme.setTextColor(itemView.getResources().getColor(R.color.white));
             } else {
                 messageLayout.setBackgroundResource(R.drawable.msg_in);
                 layoutParams.gravity = Gravity.START;
                 messageLayout.setGravity(Gravity.START);
                 messageContent.setGravity(Gravity.START);
                 messageTIme.setGravity(Gravity.END);
+                messageUser.setTextColor(itemView.getResources().getColor(R.color.black));
+                messageContent.setTextColor(itemView.getResources().getColor(R.color.black));
+                messageTIme.setTextColor(itemView.getResources().getColor(R.color.black));
             }
         }
     }

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#FF9800</color>
-    <color name="colorPrimaryDark">#F57C00</color>
-    <color name="colorLightPrimary">#FFE0B2</color>
-    <color name="colorTextPrimary">#212121</color>
-    <color name="colorSecondaryText">#757575</color>
-    <color name="colorDivider">#BDBDBD</color>
-    <color name="colorAccent">#9E9E9E</color>
+    <color name="colorPrimary">#444446</color>
+    <color name="colorPrimaryDark">#363638</color>
+    <color name="colorLightPrimary">#7A7A7E</color>
+    <color name="colorAccent">#E1E1E1</color>
+
+    <color name="FabColor">#268BFF</color>
+    <color name="white">#E7E4EF</color>
+    <color name="black">#000000</color>
+    <color name="textInputHintColor">#7A7A7E</color>
     <color name="colorSignInActivityBackground">#2B2B2B</color>
 </resources>
