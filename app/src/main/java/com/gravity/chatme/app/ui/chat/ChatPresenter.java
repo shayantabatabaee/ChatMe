@@ -4,6 +4,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.gravity.chatme.business.ChatRepository;
 import com.gravity.chatme.business.model.Message;
 import com.gravity.chatme.business.net.AuthHelper;
+import com.gravity.chatme.business.net.FirebaseHelper;
 
 import java.util.ArrayList;
 
@@ -90,12 +91,27 @@ public class ChatPresenter implements ChatContract.Presenter {
     }
 
     @Override
-    public void getWelcomeMessage() {
-        view.showWelcomeMessage("Welcome Dear " + getCurrentUser());
+    public void getMemberNumber() {
+        FirebaseHelper.getInstance().getUserNumber(new FirebaseHelper.FirebaseHelperListener.UserNumber() {
+            @Override
+            public void onUserNumberRetrieved(long number) {
+                view.displayMemberNumber(number);
+            }
+        });
     }
 
     @Override
     public String getCurrentUser() {
         return mAuthHelper.getCurrentUser().getDisplayName();
+    }
+
+
+    @Override
+    public void updateStatus(boolean online, long lastSeen) {
+        if (mAuthHelper.getCurrentUser() != null) {
+            FirebaseHelper.getInstance().updateStatus(mAuthHelper.getCurrentUser().getDisplayName(),
+                    online, lastSeen);
+        }
+
     }
 }

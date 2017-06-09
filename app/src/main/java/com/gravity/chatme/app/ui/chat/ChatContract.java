@@ -12,11 +12,11 @@ public interface ChatContract {
 
         void displayMessage(Message message);
 
-        void showWelcomeMessage(String username);
-
         void loadNavHeader(String username, String email, String urlProfileImg);
 
         void startActivity();
+
+        void displayMemberNumber(long number);
     }
 
     interface Presenter {
@@ -31,7 +31,9 @@ public interface ChatContract {
 
         void getOnScrolledMessages(long firstMessageTime);
 
-        void getWelcomeMessage();
+        void updateStatus(boolean online, long lastSeen);
+
+        void getMemberNumber();
 
         String getCurrentUser();
 

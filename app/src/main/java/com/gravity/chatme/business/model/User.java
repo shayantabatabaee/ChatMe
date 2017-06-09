@@ -3,6 +3,7 @@ package com.gravity.chatme.business.model;
 
 import com.google.firebase.database.Exclude;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,12 +13,32 @@ public class User {
 
     private String userImgUrl;
 
+    private String username;
+
+    private String email;
+
+    private long lastSeen;
+
+    private boolean online;
+
     public User() {
     }
 
-    public User(String userToken, String userImgUrl) {
+    public User(String username, String email, String userToken, String userImgUrl) {
+        this.email = email;
+        this.username = username;
         this.userToken = userToken;
         this.userImgUrl = userImgUrl;
+        this.lastSeen = new Date().getTime();
+        this.online = true;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public String getUserImgUrl() {
@@ -26,6 +47,14 @@ public class User {
 
     public String getUserToken() {
         return userToken;
+    }
+
+    public long getLastSeen() {
+        return lastSeen;
+    }
+
+    public boolean isOnline() {
+        return online;
     }
 
     @Exclude

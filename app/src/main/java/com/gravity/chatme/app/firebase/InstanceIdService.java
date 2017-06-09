@@ -13,7 +13,7 @@ public class InstanceIdService extends FirebaseInstanceIdService {
         String refreshToken = FirebaseInstanceId.getInstance().getToken();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
-            FirebaseHelper.getInstance().updateUserToken(user.getDisplayName(),user.getPhotoUrl().toString(), refreshToken);
+            FirebaseHelper.getInstance().updateUserToken(user.getDisplayName(), refreshToken);
         }
     }
 }

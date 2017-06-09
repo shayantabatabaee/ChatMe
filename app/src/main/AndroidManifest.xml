@@ -23,6 +23,11 @@
         </activity>
 
         <activity
+            android:name=".app.ui.status.StatusActivity"
+            android:theme="@style/AppTheme.DialogActivity"/>
+
+
+        <activity
             android:name=".app.ui.chat.ChatActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 

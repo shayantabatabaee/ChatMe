@@ -2,9 +2,9 @@ package com.gravity.chatme.app.ui.chat;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -24,10 +24,12 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.gravity.chatme.R;
 import com.gravity.chatme.app.ChatApplication;
 import com.gravity.chatme.app.ui.signing.GoogleSignInActivity;
+import com.gravity.chatme.app.ui.status.StatusActivity;
 import com.gravity.chatme.business.model.Message;
 import com.gravity.chatme.util.CircleTransform;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -52,6 +54,8 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
     DrawerLayout drawer;
     @BindView(R.id.nav_view)
     NavigationView navigationView;
+    @BindView(R.id.membersTitle)
+    TextView membersTitle;
     //View Objects
     TextView txtUsername;
     TextView txtEmail;
@@ -71,6 +75,10 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
         setContentView(R.layout.activity_chat);
         toolbar = (Toolbar) findViewById(R.id.nav_toolbar);
         setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+        }
+
 
         initObjects();
 
@@ -82,6 +90,7 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
 
         messageSendingContent.setOnClickListener(this);
         sendButton.setOnClickListener(this);
+        membersTitle.setOnClickListener(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
@@ -98,8 +107,7 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
 
         presenter.retrieveLocalMessage();
         presenter.fetchRemoteMessage();
-        presenter.getWelcomeMessage();
-
+        presenter.getMemberNumber();
     }
 
     @Override
@@ -107,11 +115,13 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
         super.onStart();
         presenter.getNavHeader();
         ChatApplication.isInBackground = false;
+        presenter.updateStatus(true, 0);
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onStop() {
+        super.onStop();
+        presenter.updateStatus(false, new Date().getTime());
         ChatApplication.isInBackground = true;
     }
 
@@ -173,7 +183,7 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
                 .crossFade()
                 .bitmapTransform(new CircleTransform(getApplicationContext()))
                 .thumbnail(0.5f)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(imgProfile);
     }
 
@@ -185,6 +195,9 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
         } else if (v.getId() == R.id.sendButton) {
             presenter.sendMessage(messageSendingContent.getText().toString());
             messageSendingContent.setText("");
+        } else if (v.getId() == R.id.membersTitle) {
+            Intent intent = new Intent(this, StatusActivity.class);
+            startActivity(intent);
         }
     }
 
@@ -206,13 +219,18 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
     @Override
     public void displayMessages(ArrayList<Message> messages) {
         messageList.addAll(0, messages);
-        adapter.notifyDataSetChanged();
-        recyclerView.scrollToPosition(15);
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                adapter.notifyDataSetChanged();
+            }
+        });
+        recyclerView.scrollToPosition(12);
         //recyclerView.smoothScrollToPosition(adapter.getItemCount());
     }
 
     @Override
-    public void showWelcomeMessage(String welcomeMessage) {
-        Snackbar.make(linearLayout, welcomeMessage, Snackbar.LENGTH_LONG).show();
+    public void displayMemberNumber(long number) {
+        membersTitle.setText(number + " Members");
     }
 }

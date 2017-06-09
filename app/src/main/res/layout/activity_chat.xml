@@ -19,6 +19,16 @@
             android:layout_height="?attr/actionBarSize"
             android:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
+
+            <TextView
+                android:id="@+id/membersTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Members"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
         </android.support.v7.widget.Toolbar>
 
 
@@ -66,16 +76,16 @@
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:textColor="@android:color/white"
-                    android:textColorHint="@android:color/white"
-                    android:layout_weight="1">
+                    android:textColorHint="@android:color/white">
 
                     <EditText
-                        android:textColor="@android:color/white"
                         android:id="@+id/messageSendingContent"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/message_area_text" />
+                        android:hint="@string/message_area_text"
+                        android:textColor="@android:color/white" />
 
 
                 </android.support.design.widget.TextInputLayout>

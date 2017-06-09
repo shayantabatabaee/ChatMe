@@ -58,7 +58,7 @@ public class AuthHelper {
                 if (task.isSuccessful()) {
                     listener.onSignIn();
                     FirebaseUser user = mAuth.getCurrentUser();
-                    FirebaseHelper.getInstance().addUser(user.getDisplayName(),user.getPhotoUrl().toString()
+                    FirebaseHelper.getInstance().addUser(user.getDisplayName(),user.getEmail(),user.getPhotoUrl().toString()
                             , FirebaseInstanceId.getInstance().getToken());
                 } else {
                     listener.onFailed();

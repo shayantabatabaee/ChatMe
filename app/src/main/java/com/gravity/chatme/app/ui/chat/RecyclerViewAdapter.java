@@ -44,11 +44,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 layoutParams.gravity = Gravity.END;
                 messageLayout.setGravity(Gravity.END);
                 messageContent.setGravity(Gravity.END);
+                messageTIme.setGravity(Gravity.START);
             } else {
                 messageLayout.setBackgroundResource(R.drawable.msg_in);
                 layoutParams.gravity = Gravity.START;
                 messageLayout.setGravity(Gravity.START);
                 messageContent.setGravity(Gravity.START);
+                messageTIme.setGravity(Gravity.END);
             }
         }
     }
