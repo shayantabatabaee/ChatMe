@@ -19,10 +19,10 @@ public class ChatRepository {
     private FirebaseHelper firebaseHelper;
     //Database Access Object
     private MessageDao messageDao;
-    //Last Message Time
-    private long lastMessageTime;
     //Authentication helper
     private AuthHelper mAuthHelper;
+    //Message Time
+    private long messageTime;
 
     public ChatRepository(Context context, AuthHelper authHelper) {
         firebaseHelper = FirebaseHelper.getInstance();
@@ -30,13 +30,110 @@ public class ChatRepository {
         this.messageDao = ChatMeDatabase.getDatabase(context).messageDao();
     }
 
-    public void addMessage(String messageContent) {
+    public void getMessages(final ChatRepositoryListener listener) {
+
+        ArrayList<Message> dbMessageList = new ArrayList<>();
+        dbMessageList.addAll(messageDao.getAllMessages());
+        if (!dbMessageList.isEmpty()) {
+            Collections.reverse(dbMessageList);
+            messageTime = dbMessageList.get(dbMessageList.size() - 1).getMessageTime();
+            listener.onGetMessages(dbMessageList);
+            firebaseHelper.fetchLowerMessages(new FirebaseHelper.FirebaseHelperListener.Message() {
+
+                @Override
+                public void onSingleMessageRecieved(Message message) {
+
+                }
+
+                @Override
+                public void onListMessageRecieved(ArrayList<Message> messages) {
+                    listener.onGetMessages(messages);
+                    messageDao.insertMessage(messages);
+                }
+
+                @Override
+                public void onFailure(String error) {
+                    listener.onFailure(error);
+                }
+            }, messageTime);
+        } else {
+
+            messageTime = new Date().getTime();
+            firebaseHelper.fetchUpperMessages(new FirebaseHelper.FirebaseHelperListener.Message() {
+                @Override
+                public void onListMessageRecieved(ArrayList<Message> messages) {
+                    listener.onGetMessages(messages);
+                    messageDao.insertMessage(messages);
+                }
+
+                @Override
+                public void onSingleMessageRecieved(Message message) {
+
+                }
+
+                @Override
+                public void onFailure(String error) {
+
+                }
+            }, messageTime);
+        }
+
+        firebaseHelper.fetchChatMessages(new FirebaseHelper.FirebaseHelperListener.Message() {
+            @Override
+            public void onListMessageRecieved(ArrayList<Message> messages) {
+
+            }
+
+            @Override
+            public void onSingleMessageRecieved(Message message) {
+                listener.onGetMessages(message);
+                messageDao.insertMessage(message);
+            }
+
+            @Override
+            public void onFailure(String error) {
+
+            }
+        }, messageTime);
+
+    }
+
+
+    public void retrieveOnScrolledMessages(long firstMessageTime, final ChatRepositoryListener listener) {
+        ArrayList<Message> scrolledMessages = new ArrayList<>();
+        scrolledMessages.addAll(messageDao.getOnScrolledMessages(firstMessageTime));
+        if (!scrolledMessages.isEmpty()) {
+            Collections.reverse(scrolledMessages);
+            listener.onGetMessages(scrolledMessages);
+        } else {
+            firebaseHelper.fetchUpperMessages(new FirebaseHelper.FirebaseHelperListener.Message() {
+                @Override
+                public void onListMessageRecieved(ArrayList<Message> messages) {
+                    listener.onGetMessages(messages);
+
+                }
+
+                @Override
+                public void onSingleMessageRecieved(Message message) {
+
+                }
+
+                @Override
+                public void onFailure(String error) {
+
+                }
+            }, firstMessageTime);
+        }
+    }
+
+
+    public void sendMessage(String messageContent) {
         final Message message = new Message();
         message.setMessageUser(mAuthHelper.getCurrentUser().getDisplayName());
         message.setMessageTime(new Date().getTime());
         message.setMessageContent(messageContent);
         if (!message.getMessageContent().equals("")) {
-            firebaseHelper.sendMessage(message, new DatabaseReference.CompletionListener() {
+            firebaseHelper.saveMessage(message, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                     //messageDao.insertMessage(message);
@@ -45,60 +142,13 @@ public class ChatRepository {
         }
     }
 
-
-    public void retrieveDBMessage(ChatRepositoryListener.DbListener listener) {
-        ArrayList<Message> dbMessageList = new ArrayList<>();
-        dbMessageList.addAll(messageDao.getAllMessages());
-        Collections.reverse(dbMessageList);
-        if (!dbMessageList.isEmpty()) {
-            lastMessageTime = dbMessageList.get(dbMessageList.size() - 1).getMessageTime();
-            listener.onRetrieveDBMessage(dbMessageList);
-        }
-
-    }
-
-    public void retrieveOnScrolledMessages(long firstMessageTime,ChatRepositoryListener.DbListener listener){
-        ArrayList<Message> scrolledMessages = new ArrayList<>();
-        scrolledMessages.addAll(messageDao.getOnScrolledMessages(firstMessageTime));
-        Collections.reverse(scrolledMessages);
-
-        if(!scrolledMessages.isEmpty())
-        {
-            listener.onRetrieveDBMessage(scrolledMessages);
-        }
-
-    }
-
-    public void fetchRemoteMessage(final ChatRepositoryListener.FirebaseListener listener) {
-        firebaseHelper.retrieveMessage(new FirebaseHelper.FirebaseHelperListener() {
-
-            @Override
-            public void onMessageRecieved(Message message) {
-                listener.OnRetrieveFirebaseMessage(message);
-                /*if (!message.getMessageUser().equals(mAuthHelper.getCurrentUser().getDisplayName())) {
-
-                }*/
-                messageDao.insertMessage(message);
-            }
-
-
-            @Override
-            public void onFailure(String error) {
-                listener.onFailure(error);
-            }
-        }, lastMessageTime);
-    }
-
     public interface ChatRepositoryListener {
 
-        interface DbListener {
-            void onRetrieveDBMessage(ArrayList<Message> messages);
-        }
+        void onGetMessages(ArrayList<Message> messages);
 
-        interface FirebaseListener {
-            void OnRetrieveFirebaseMessage(Message message);
+        void onGetMessages(Message message);
 
-            void onFailure(String message);
-        }
+        void onFailure(String message);
+
     }
 }

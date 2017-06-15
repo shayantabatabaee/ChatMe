@@ -24,26 +24,29 @@ public class ChatPresenter implements ChatContract.Presenter {
     }
 
     @Override
-    public void sendMessage(String messageContent) {
-        chatRepository.addMessage(messageContent);
-    }
-
-    @Override
-    public void retrieveLocalMessage() {
-        chatRepository.retrieveDBMessage(new ChatRepository.ChatRepositoryListener.DbListener() {
+    public void getData() {
+        //Load Navigation Header Information
+        view.loadNavHeader(mAuthHelper.getCurrentUser().getDisplayName(),
+                mAuthHelper.getCurrentUser().getEmail(),
+                mAuthHelper.getCurrentUser().getPhotoUrl().toString());
+        //Load Members In Group
+        FirebaseHelper.getInstance().getUserNumber(new FirebaseHelper.FirebaseHelperListener.UserNumber() {
             @Override
-            public void onRetrieveDBMessage(ArrayList<Message> messages) {
-                view.displayMessages(messages);
+            public void onUserNumberRetrieved(long number) {
+                view.displayMemberNumber(number);
             }
         });
-    }
 
-    @Override
-    public void fetchRemoteMessage() {
-        chatRepository.fetchRemoteMessage(new ChatRepository.ChatRepositoryListener.FirebaseListener() {
+        //Load Messages
+        chatRepository.getMessages(new ChatRepository.ChatRepositoryListener() {
             @Override
-            public void OnRetrieveFirebaseMessage(Message message) {
-                view.displayMessage(message);
+            public void onGetMessages(ArrayList<Message> messages) {
+                view.displayData(messages);
+            }
+
+            @Override
+            public void onGetMessages(Message message) {
+                view.displayData(message);
             }
 
             @Override
@@ -54,13 +57,28 @@ public class ChatPresenter implements ChatContract.Presenter {
     }
 
     @Override
-    public void getOnScrolledMessages(long firstMessageTime) {
-        chatRepository.retrieveOnScrolledMessages(firstMessageTime, new ChatRepository.ChatRepositoryListener.DbListener() {
+    public void getOnScrolledData(long firstTime) {
+        chatRepository.retrieveOnScrolledMessages(firstTime, new ChatRepository.ChatRepositoryListener() {
             @Override
-            public void onRetrieveDBMessage(ArrayList<Message> messages) {
-                view.displayMessages(messages);
+            public void onGetMessages(ArrayList<Message> messages) {
+                view.displayData(messages);
+            }
+
+            @Override
+            public void onGetMessages(Message message) {
+
+            }
+
+            @Override
+            public void onFailure(String message) {
+
             }
         });
+    }
+
+    @Override
+    public void sendData(String content) {
+        chatRepository.sendMessage(content);
     }
 
     @Override
@@ -84,34 +102,17 @@ public class ChatPresenter implements ChatContract.Presenter {
     }
 
     @Override
-    public void getNavHeader() {
-        view.loadNavHeader(mAuthHelper.getCurrentUser().getDisplayName(),
-                mAuthHelper.getCurrentUser().getEmail(),
-                mAuthHelper.getCurrentUser().getPhotoUrl().toString());
-    }
-
-    @Override
-    public void getMemberNumber() {
-        FirebaseHelper.getInstance().getUserNumber(new FirebaseHelper.FirebaseHelperListener.UserNumber() {
-            @Override
-            public void onUserNumberRetrieved(long number) {
-                view.displayMemberNumber(number);
-            }
-        });
-    }
-
-    @Override
-    public String getCurrentUser() {
-        return mAuthHelper.getCurrentUser().getDisplayName();
-    }
-
-
-    @Override
     public void updateStatus(boolean online, long lastSeen) {
         if (mAuthHelper.getCurrentUser() != null) {
             FirebaseHelper.getInstance().updateStatus(mAuthHelper.getCurrentUser().getDisplayName(),
                     online, lastSeen);
         }
 
+    }
+
+
+    @Override
+    public String getCurrentUser() {
+        return mAuthHelper.getCurrentUser().getDisplayName();
     }
 }

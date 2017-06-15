@@ -34,18 +34,38 @@ public class FirebaseHelper {
     }
 
 
-    public void sendMessage(Message message, DatabaseReference.CompletionListener completionListener) {
+    public void saveMessage(Message message, DatabaseReference.CompletionListener completionListener) {
         primaryKey = mDatabaseReference.child("messages").push().getKey();
         message.setUid(primaryKey);
         mDatabaseReference.child("messages").child(primaryKey).setValue(message, completionListener);
     }
 
-    public void retrieveMessage(final FirebaseHelperListener listener, Long messageTime) {
-        mDatabaseReference.child("messages").orderByChild("messageTime").startAt(messageTime + 1).addChildEventListener(new ChildEventListener() {
+    public void fetchLowerMessages(final FirebaseHelperListener.Message listener, Long lastMessageTime) {
+        mDatabaseReference.child("messages").orderByChild("messageTime").startAt(lastMessageTime + 1).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ArrayList<Message> messages = new ArrayList<>();
+                for (DataSnapshot messageSnapshot : dataSnapshot.getChildren()) {
+                    Message message = messageSnapshot.getValue(Message.class);
+                    messages.add(message);
+                }
+                listener.onListMessageRecieved(messages);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    public void fetchChatMessages(final FirebaseHelperListener.Message listener,long lastMessageTime){
+        mDatabaseReference.child("messages").orderByChild("messageTime").startAt(lastMessageTime + 1).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Message message = dataSnapshot.getValue(Message.class);
-                listener.onMessageRecieved(message);
+                listener.onSingleMessageRecieved(message);
             }
 
             @Override
@@ -68,23 +88,27 @@ public class FirebaseHelper {
 
             }
         });
+    }
 
-        /*mDatabaseReference.child("messages").orderByChild("messageTime").startAt(messageTime + 1).addValueEventListener(new ValueEventListener() {
+    public void fetchUpperMessages(final FirebaseHelperListener.Message listener, long firstMessageTime) {
+        mDatabaseReference.child("messages").orderByChild("messageTime").endAt(firstMessageTime - 1).limitToLast(10).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                ArrayList<Message> messages = new ArrayList<>();
                 for (DataSnapshot messageSnapshot : dataSnapshot.getChildren()) {
                     Message message = messageSnapshot.getValue(Message.class);
-                    listener.onMessageRecieved(message);
+                    messages.add(message);
                 }
+                listener.onListMessageRecieved(messages);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });*/
-
+        });
     }
+
 
     public void addUser(String username, String email, String userImgUrl, String token) {
         User user = new User(username, email, token, userImgUrl);
@@ -92,12 +116,6 @@ public class FirebaseHelper {
     }
 
     public void updateUserToken(String username, String token) {
-       /* User user = new User(token, userImgUrl);
-        Map<String, Object> userValue = user.toMap();
-
-        Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/users/" + username, userValue);
-        mDatabaseReference.updateChildren(childUpdates);*/
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("userToken", token);
         mDatabaseReference.child("users").child(username).updateChildren(childUpdates);
@@ -150,9 +168,13 @@ public class FirebaseHelper {
 
     public interface FirebaseHelperListener {
 
-        void onMessageRecieved(Message message);
+        interface Message {
+            void onListMessageRecieved(ArrayList<com.gravity.chatme.business.model.Message> messages);
 
-        void onFailure(String error);
+            void onSingleMessageRecieved(com.gravity.chatme.business.model.Message message);
+
+            void onFailure(String error);
+        }
 
         interface User {
             void onUserRetrieved(ArrayList<com.gravity.chatme.business.model.User> users);

@@ -79,10 +79,9 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
 
-
         initObjects();
 
-        setUpNavigationView();
+        setupNavigationView();
 
         txtUsername = (TextView) navHeader.findViewById(R.id.username);
         txtEmail = (TextView) navHeader.findViewById(R.id.email);
@@ -94,26 +93,22 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
-
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 if (!recyclerView.canScrollVertically(-1) && (dy < 0)) {
-                    long firstMessageTime = messageList.get(0).getMessageTime();
-                    presenter.getOnScrolledMessages(firstMessageTime);
+                    long firstTime = messageList.get(0).getMessageTime();
+                    presenter.getOnScrolledData(firstTime);
                 }
             }
         });
 
-        presenter.retrieveLocalMessage();
-        presenter.fetchRemoteMessage();
-        presenter.getMemberNumber();
+        presenter.getData();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        presenter.getNavHeader();
         ChatApplication.isInBackground = false;
         presenter.updateStatus(true, 0);
     }
@@ -137,7 +132,7 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
         adapter = new RecyclerViewAdapter(messageList, presenter.getCurrentUser());
     }
 
-    private void setUpNavigationView() {
+    private void setupNavigationView() {
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -193,7 +188,7 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
             recyclerView.smoothScrollToPosition(adapter.getItemCount());
 
         } else if (v.getId() == R.id.sendButton) {
-            presenter.sendMessage(messageSendingContent.getText().toString());
+            presenter.sendData(messageSendingContent.getText().toString());
             messageSendingContent.setText("");
         } else if (v.getId() == R.id.membersTitle) {
             Intent intent = new Intent(this, StatusActivity.class);
@@ -209,7 +204,7 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
     }
 
     @Override
-    public void displayMessage(Message message) {
+    public void displayData(Message message) {
         messageList.add(message);
         adapter.notifyDataSetChanged();
         recyclerView.smoothScrollToPosition(adapter.getItemCount());
@@ -217,16 +212,17 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
     }
 
     @Override
-    public void displayMessages(ArrayList<Message> messages) {
-        messageList.addAll(0, messages);
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-                adapter.notifyDataSetChanged();
-            }
-        });
-        recyclerView.scrollToPosition(12);
-        //recyclerView.smoothScrollToPosition(adapter.getItemCount());
+    public void displayData(ArrayList<Message> messages) {
+        if (!messages.isEmpty()) {
+            messageList.addAll(0, messages);
+            new Handler().post(new Runnable() {
+                @Override
+                public void run() {
+                    adapter.notifyDataSetChanged();
+                }
+            });
+            recyclerView.scrollToPosition(messages.size()+2);
+        }
     }
 
     @Override

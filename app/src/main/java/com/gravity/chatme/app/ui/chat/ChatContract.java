@@ -8,9 +8,9 @@ public interface ChatContract {
 
     interface View {
 
-        void displayMessages(ArrayList<Message> messages);
+        void displayData(ArrayList<Message> messages);
 
-        void displayMessage(Message message);
+        void displayData(Message message);
 
         void loadNavHeader(String username, String email, String urlProfileImg);
 
@@ -21,23 +21,17 @@ public interface ChatContract {
 
     interface Presenter {
 
-        void getNavHeader();
+        void getData();
 
-        void sendMessage(String messageContent);
+        void sendData(String content);
 
-        void retrieveLocalMessage();
-
-        void fetchRemoteMessage();
-
-        void getOnScrolledMessages(long firstMessageTime);
+        void getOnScrolledData(long firstTime);
 
         void updateStatus(boolean online, long lastSeen);
 
-        void getMemberNumber();
+        void signOut();
 
         String getCurrentUser();
-
-        void signOut();
 
 
     }

@@ -22,4 +22,7 @@ public interface MessageDao {
 
     @Insert(onConflict = IGNORE)
     void insertMessage(Message message);
+
+    @Insert(onConflict = IGNORE)
+    void insertMessage(List<Message> messages);
 }
