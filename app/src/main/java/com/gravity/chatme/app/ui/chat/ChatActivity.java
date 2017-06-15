@@ -57,16 +57,18 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
     @BindView(R.id.membersTitle)
     TextView membersTitle;
     //View Objects
-    TextView txtUsername;
-    TextView txtEmail;
-    ImageView imgProfile;
-    Toolbar toolbar;
+    private TextView txtUsername;
+    private TextView txtEmail;
+    private ImageView imgProfile;
+    private Toolbar toolbar;
 
     //RecyclerView Objects
     private LinearLayoutManager layoutManager;
     private RecyclerView.Adapter adapter;
     //Message List Object
     private ArrayList<Message> messageList;
+    //RecyclerView Listener Class
+    private ScrollListener scrollListener;
 
 
     @Override
@@ -90,18 +92,12 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
         messageSendingContent.setOnClickListener(this);
         sendButton.setOnClickListener(this);
         membersTitle.setOnClickListener(this);
+
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                if (!recyclerView.canScrollVertically(-1) && (dy < 0)) {
-                    long firstTime = messageList.get(0).getMessageTime();
-                    presenter.getOnScrolledData(firstTime);
-                }
-            }
-        });
+        scrollListener = new ScrollListener();
+        recyclerView.addOnScrollListener(scrollListener);
 
         presenter.getData();
     }
@@ -182,6 +178,7 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
                 .into(imgProfile);
     }
 
+
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.messageSendingContent) {
@@ -195,6 +192,7 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
             startActivity(intent);
         }
     }
+
 
     @Override
     public void startActivity() {
@@ -212,7 +210,7 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
     }
 
     @Override
-    public void displayData(ArrayList<Message> messages) {
+    public void displayUpperData(ArrayList<Message> messages) {
         if (!messages.isEmpty()) {
             messageList.addAll(0, messages);
             new Handler().post(new Runnable() {
@@ -221,7 +219,22 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
                     adapter.notifyDataSetChanged();
                 }
             });
-            recyclerView.scrollToPosition(messages.size()+2);
+            recyclerView.scrollToPosition(messages.size() + 2);
+            recyclerView.addOnScrollListener(scrollListener);
+        }
+    }
+
+    @Override
+    public void displayLowerData(ArrayList<Message> messages) {
+        if (!messages.isEmpty()) {
+            messageList.addAll(messageList.size(), messages);
+            new Handler().post(new Runnable() {
+                @Override
+                public void run() {
+                    adapter.notifyDataSetChanged();
+                }
+            });
+            recyclerView.scrollToPosition(messageList.size() - 1);
         }
     }
 
@@ -229,4 +242,16 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
     public void displayMemberNumber(long number) {
         membersTitle.setText(number + " Members");
     }
+
+    public class ScrollListener extends RecyclerView.OnScrollListener {
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            if (!recyclerView.canScrollVertically(-1) && (dy < 0)) {
+                recyclerView.removeOnScrollListener(this);
+                long firstTime = messageList.get(0).getMessageTime();
+                presenter.getScrolledData(firstTime);
+            }
+        }
+    }
 }
+

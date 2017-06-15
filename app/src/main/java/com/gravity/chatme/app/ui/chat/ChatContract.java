@@ -8,7 +8,9 @@ public interface ChatContract {
 
     interface View {
 
-        void displayData(ArrayList<Message> messages);
+        void displayLowerData(ArrayList<Message> messages);
+
+        void displayUpperData(ArrayList<Message> messages);
 
         void displayData(Message message);
 
@@ -25,7 +27,7 @@ public interface ChatContract {
 
         void sendData(String content);
 
-        void getOnScrolledData(long firstTime);
+        void getScrolledData(long firstTime);
 
         void updateStatus(boolean online, long lastSeen);
 

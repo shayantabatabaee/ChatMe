@@ -37,7 +37,7 @@ public class ChatRepository {
         if (!dbMessageList.isEmpty()) {
             Collections.reverse(dbMessageList);
             messageTime = dbMessageList.get(dbMessageList.size() - 1).getMessageTime();
-            listener.onGetMessages(dbMessageList);
+            listener.onGetLowerMessages(dbMessageList);
             firebaseHelper.fetchLowerMessages(new FirebaseHelper.FirebaseHelperListener.Message() {
 
                 @Override
@@ -47,7 +47,7 @@ public class ChatRepository {
 
                 @Override
                 public void onListMessageRecieved(ArrayList<Message> messages) {
-                    listener.onGetMessages(messages);
+                    listener.onGetLowerMessages(messages);
                     messageDao.insertMessage(messages);
                 }
 
@@ -62,7 +62,7 @@ public class ChatRepository {
             firebaseHelper.fetchUpperMessages(new FirebaseHelper.FirebaseHelperListener.Message() {
                 @Override
                 public void onListMessageRecieved(ArrayList<Message> messages) {
-                    listener.onGetMessages(messages);
+                    listener.onGetUpperMessages(messages);
                     messageDao.insertMessage(messages);
                 }
 
@@ -77,7 +77,7 @@ public class ChatRepository {
                 }
             }, messageTime);
         }
-
+        messageTime = new Date().getTime();
         firebaseHelper.fetchChatMessages(new FirebaseHelper.FirebaseHelperListener.Message() {
             @Override
             public void onListMessageRecieved(ArrayList<Message> messages) {
@@ -86,7 +86,7 @@ public class ChatRepository {
 
             @Override
             public void onSingleMessageRecieved(Message message) {
-                listener.onGetMessages(message);
+                listener.onGetMessage(message);
                 messageDao.insertMessage(message);
             }
 
@@ -98,18 +98,17 @@ public class ChatRepository {
 
     }
 
-
     public void retrieveOnScrolledMessages(long firstMessageTime, final ChatRepositoryListener listener) {
         ArrayList<Message> scrolledMessages = new ArrayList<>();
         scrolledMessages.addAll(messageDao.getOnScrolledMessages(firstMessageTime));
         if (!scrolledMessages.isEmpty()) {
             Collections.reverse(scrolledMessages);
-            listener.onGetMessages(scrolledMessages);
+            listener.onGetUpperMessages(scrolledMessages);
         } else {
             firebaseHelper.fetchUpperMessages(new FirebaseHelper.FirebaseHelperListener.Message() {
                 @Override
                 public void onListMessageRecieved(ArrayList<Message> messages) {
-                    listener.onGetMessages(messages);
+                    listener.onGetUpperMessages(messages);
 
                 }
 
@@ -144,9 +143,11 @@ public class ChatRepository {
 
     public interface ChatRepositoryListener {
 
-        void onGetMessages(ArrayList<Message> messages);
+        void onGetUpperMessages(ArrayList<Message> messages);
 
-        void onGetMessages(Message message);
+        void onGetLowerMessages(ArrayList<Message> messages);
+
+        void onGetMessage(Message message);
 
         void onFailure(String message);
 

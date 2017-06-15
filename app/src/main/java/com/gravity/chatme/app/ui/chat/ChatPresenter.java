@@ -40,12 +40,17 @@ public class ChatPresenter implements ChatContract.Presenter {
         //Load Messages
         chatRepository.getMessages(new ChatRepository.ChatRepositoryListener() {
             @Override
-            public void onGetMessages(ArrayList<Message> messages) {
-                view.displayData(messages);
+            public void onGetUpperMessages(ArrayList<Message> messages) {
+                view.displayUpperData(messages);
             }
 
             @Override
-            public void onGetMessages(Message message) {
+            public void onGetLowerMessages(ArrayList<Message> messages) {
+                view.displayLowerData(messages);
+            }
+
+            @Override
+            public void onGetMessage(Message message) {
                 view.displayData(message);
             }
 
@@ -57,15 +62,20 @@ public class ChatPresenter implements ChatContract.Presenter {
     }
 
     @Override
-    public void getOnScrolledData(long firstTime) {
+    public void getScrolledData(long firstTime) {
         chatRepository.retrieveOnScrolledMessages(firstTime, new ChatRepository.ChatRepositoryListener() {
             @Override
-            public void onGetMessages(ArrayList<Message> messages) {
-                view.displayData(messages);
+            public void onGetUpperMessages(ArrayList<Message> messages) {
+                view.displayUpperData(messages);
             }
 
             @Override
-            public void onGetMessages(Message message) {
+            public void onGetLowerMessages(ArrayList<Message> messages) {
+
+            }
+
+            @Override
+            public void onGetMessage(Message message) {
 
             }
 
