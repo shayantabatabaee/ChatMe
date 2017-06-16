@@ -2,9 +2,9 @@ package com.gravity.chatme.app.ui.chat;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.gravity.chatme.business.ChatRepository;
+import com.gravity.chatme.business.UserRepository;
 import com.gravity.chatme.business.model.Message;
 import com.gravity.chatme.business.net.AuthHelper;
-import com.gravity.chatme.business.net.FirebaseHelper;
 
 import java.util.ArrayList;
 
@@ -16,11 +16,14 @@ public class ChatPresenter implements ChatContract.Presenter {
     private ChatRepository chatRepository;
     //Authentication helper
     private AuthHelper mAuthHelper;
+    //UserRepository object
+    private UserRepository userRepository;
 
     public ChatPresenter(ChatActivity view, GoogleApiClient.Builder builder) {
         this.view = view;
         mAuthHelper = AuthHelper.getInstance(builder);
         chatRepository = new ChatRepository(view.getApplicationContext(), mAuthHelper);
+        userRepository = UserRepository.getInstance();
     }
 
     @Override
@@ -30,7 +33,7 @@ public class ChatPresenter implements ChatContract.Presenter {
                 mAuthHelper.getCurrentUser().getEmail(),
                 mAuthHelper.getCurrentUser().getPhotoUrl().toString());
         //Load Members In Group
-        FirebaseHelper.getInstance().getUserNumber(new FirebaseHelper.FirebaseHelperListener.UserNumber() {
+        userRepository.getUserNumbers(new UserRepository.UserRepositoryListener.Number() {
             @Override
             public void onUserNumberRetrieved(long number) {
                 view.displayMemberNumber(number);
@@ -114,7 +117,7 @@ public class ChatPresenter implements ChatContract.Presenter {
     @Override
     public void updateStatus(boolean online, long lastSeen) {
         if (mAuthHelper.getCurrentUser() != null) {
-            FirebaseHelper.getInstance().updateStatus(mAuthHelper.getCurrentUser().getDisplayName(),
+            userRepository.updateStatus(mAuthHelper.getCurrentUser().getDisplayName(),
                     online, lastSeen);
         }
 

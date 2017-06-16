@@ -174,7 +174,7 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
                 .crossFade()
                 .bitmapTransform(new CircleTransform(getApplicationContext()))
                 .thumbnail(0.5f)
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .into(imgProfile);
     }
 

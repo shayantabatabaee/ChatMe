@@ -20,6 +20,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.gravity.chatme.R;
 import com.gravity.chatme.app.ChatApplication;
+import com.gravity.chatme.business.UserRepository;
 
 public class AuthHelper {
 
@@ -29,6 +30,8 @@ public class AuthHelper {
     private static AuthHelper sInstance;
     //Google Api Client Object
     private GoogleApiClient mGoogleApiClient;
+    //Number Repository
+    private UserRepository userRepository;
 
     public static AuthHelper getInstance(GoogleApiClient.Builder builder) {
         return new AuthHelper(builder);
@@ -47,6 +50,8 @@ public class AuthHelper {
                 .build();
 
         mAuth = FirebaseAuth.getInstance();
+
+        userRepository = UserRepository.getInstance();
     }
 
     public void firebaseAuthWithGoogle(GoogleSignInAccount acct, final AuthHelperListener listener) {
@@ -58,7 +63,7 @@ public class AuthHelper {
                 if (task.isSuccessful()) {
                     listener.onSignIn();
                     FirebaseUser user = mAuth.getCurrentUser();
-                    FirebaseHelper.getInstance().addUser(user.getDisplayName(),user.getEmail(),user.getPhotoUrl().toString()
+                    userRepository.addUser(user.getDisplayName(), user.getEmail(), user.getPhotoUrl().toString()
                             , FirebaseInstanceId.getInstance().getToken());
                 } else {
                     listener.onFailed();
@@ -77,7 +82,7 @@ public class AuthHelper {
     }
 
     public void signOut(final AuthHelperListener listener) {
-        FirebaseHelper.getInstance().removeUser(mAuth.getCurrentUser().getDisplayName());
+        userRepository.removeUser(mAuth.getCurrentUser().getDisplayName());
         mAuth.signOut();
 
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {

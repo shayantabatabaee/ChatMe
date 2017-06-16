@@ -25,4 +25,5 @@ public interface MessageDao {
 
     @Insert(onConflict = IGNORE)
     void insertMessage(List<Message> messages);
+
 }

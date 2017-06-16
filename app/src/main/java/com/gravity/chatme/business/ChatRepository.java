@@ -135,7 +135,7 @@ public class ChatRepository {
             firebaseHelper.saveMessage(message, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                    //messageDao.insertMessage(message);
+                    //messageDao.insertMessage(messagein);
                 }
             });
         }

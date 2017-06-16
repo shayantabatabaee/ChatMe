@@ -5,7 +5,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
-import com.gravity.chatme.business.net.FirebaseHelper;
+import com.gravity.chatme.business.UserRepository;
 
 public class InstanceIdService extends FirebaseInstanceIdService {
     @Override
@@ -13,7 +13,7 @@ public class InstanceIdService extends FirebaseInstanceIdService {
         String refreshToken = FirebaseInstanceId.getInstance().getToken();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
-            FirebaseHelper.getInstance().updateUserToken(user.getDisplayName(), refreshToken);
+            UserRepository.getInstance().updateUserToken(user.getDisplayName(), refreshToken);
         }
     }
 }

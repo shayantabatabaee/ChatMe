@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/subMessageLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/message_view_margin_bottom"
+    android:gravity="end"
+    android:orientation="horizontal">
+
+
+    <LinearLayout
+        android:id="@+id/messageLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/message_layout_margin"
+        android:background="@drawable/msg_out"
+        android:gravity="start"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/messageUser"
+            android:layout_width="wrap_content"
+
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/message_text_view_margin_bottom"
+            android:layout_marginEnd="@dimen/message_layout_margin"
+            android:layout_marginStart="@dimen/message_layout_margin"
+            android:layout_marginTop="@dimen/message_text_view_margin_top"
+            android:gravity="end"
+            android:textColor="@color/white"
+            android:textStyle="normal|bold" />
+
+        <TextView
+            android:id="@+id/messageContent"
+            android:layout_width="match_parent"
+
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/message_text_view_margin_bottom"
+            android:layout_marginEnd="@dimen/message_layout_margin"
+            android:layout_marginStart="@dimen/message_layout_margin"
+            android:gravity="start"
+            android:maxEms="10"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/messageTime"
+            android:layout_width="wrap_content"
+
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/message_text_view_margin_bottom"
+            android:layout_marginEnd="@dimen/message_layout_margin"
+            android:layout_marginStart="@dimen/message_layout_margin"
+            android:gravity="start"
+            android:minEms="8"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/img_msg_profile"
+        android:layout_width="@dimen/message_profile_width"
+        android:layout_height="@dimen/message_profile_height"
+        android:layout_gravity="bottom"
+        android:paddingTop="@dimen/nav_header_vertical_spacing"
+        android:src="@mipmap/ic_launcher_round" />
+
+
+</LinearLayout>

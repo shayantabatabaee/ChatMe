@@ -67,7 +67,7 @@ public class StatusRecyclerViewAdapter extends RecyclerView.Adapter<StatusRecycl
                 .crossFade()
                 .bitmapTransform(new CircleTransform(ChatApplication.getInstance().getApplicationContext()))
                 .thumbnail(0.5f)
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .into(viewHolder.userImage);
     }
 

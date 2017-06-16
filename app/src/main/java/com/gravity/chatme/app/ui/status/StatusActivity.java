@@ -26,7 +26,7 @@ public class StatusActivity extends AppCompatActivity implements StatusContract.
     //RecyclerView Objects
     private LinearLayoutManager layoutManager;
     private RecyclerView.Adapter adapter;
-    //User List Object
+    //Number List Object
     ArrayList<User> userList;
 
     @Override

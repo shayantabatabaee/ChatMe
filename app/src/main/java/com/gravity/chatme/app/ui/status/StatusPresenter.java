@@ -1,8 +1,8 @@
 package com.gravity.chatme.app.ui.status;
 
 
+import com.gravity.chatme.business.UserRepository;
 import com.gravity.chatme.business.model.User;
-import com.gravity.chatme.business.net.FirebaseHelper;
 
 import java.util.ArrayList;
 
@@ -16,11 +16,12 @@ public class StatusPresenter implements StatusContract.presenter {
 
     @Override
     public void retrieveData() {
-        FirebaseHelper.getInstance().retrieveUsers(new FirebaseHelper.FirebaseHelperListener.User() {
+        UserRepository.getInstance().getUsersStatus(new UserRepository.UserRepositoryListener.Status() {
             @Override
             public void onUserRetrieved(ArrayList<User> users) {
                 view.displayData(users);
             }
+
         });
     }
 }

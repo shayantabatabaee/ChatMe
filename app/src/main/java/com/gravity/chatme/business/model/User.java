@@ -1,24 +1,31 @@
 package com.gravity.chatme.business.model;
 
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+
 import com.google.firebase.database.Exclude;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+@Entity(primaryKeys = {"username"})
 public class User {
-
-    private String userToken;
-
-    private String userImgUrl;
 
     private String username;
 
+    @ColumnInfo(name = "user_img")
+    private String userImgUrl;
+    @ColumnInfo(name = "email")
     private String email;
 
+    @Ignore
+    private String userToken;
+    @Ignore
     private long lastSeen;
-
+    @Ignore
     private boolean online;
 
     public User() {
@@ -31,6 +38,18 @@ public class User {
         this.userImgUrl = userImgUrl;
         this.lastSeen = new Date().getTime();
         this.online = true;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setUserImgUrl(String userImgUrl) {
+        this.userImgUrl = userImgUrl;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getUsername() {

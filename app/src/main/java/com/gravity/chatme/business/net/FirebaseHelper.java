@@ -60,7 +60,7 @@ public class FirebaseHelper {
 
     }
 
-    public void fetchChatMessages(final FirebaseHelperListener.Message listener,long lastMessageTime){
+    public void fetchChatMessages(final FirebaseHelperListener.Message listener, long lastMessageTime) {
         mDatabaseReference.child("messages").orderByChild("messageTime").startAt(lastMessageTime + 1).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -110,9 +110,8 @@ public class FirebaseHelper {
     }
 
 
-    public void addUser(String username, String email, String userImgUrl, String token) {
-        User user = new User(username, email, token, userImgUrl);
-        mDatabaseReference.child("users").child(username).setValue(user);
+    public void addUser(User user) {
+        mDatabaseReference.child("users").child(user.getUsername()).setValue(user);
     }
 
     public void updateUserToken(String username, String token) {
@@ -128,7 +127,11 @@ public class FirebaseHelper {
         mDatabaseReference.child("users").child(username).updateChildren(childUpdates);
     }
 
-    public void retrieveUsers(final FirebaseHelperListener.User listener) {
+    public void removeUser(String username) {
+        mDatabaseReference.child("users").child(username).removeValue();
+    }
+
+    public void retrieveUsersStatus(final FirebaseHelperListener.Status listener) {
         mDatabaseReference.child("users").orderByChild("lastSeen").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -147,15 +150,26 @@ public class FirebaseHelper {
         });
     }
 
-    public void removeUser(String username) {
-        mDatabaseReference.child("users").child(username).removeValue();
-    }
-
-    public void getUserNumber(final FirebaseHelperListener.UserNumber listener) {
+    public void retrieveUserNumbers(final FirebaseHelperListener.Number listener) {
         mDatabaseReference.child("users").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 listener.onUserNumberRetrieved(dataSnapshot.getChildrenCount());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void getUserByUsername(String username, final FirebaseHelperListener.User listener) {
+        mDatabaseReference.child("users").child(username).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                listener.onGetUserByUserName(user);
             }
 
             @Override
@@ -176,14 +190,18 @@ public class FirebaseHelper {
             void onFailure(String error);
         }
 
-        interface User {
-            void onUserRetrieved(ArrayList<com.gravity.chatme.business.model.User> users);
-        }
+        interface Number {
 
-        interface UserNumber {
             void onUserNumberRetrieved(long number);
         }
 
+        interface Status {
+            void onUserRetrieved(ArrayList<com.gravity.chatme.business.model.User> users);
+        }
+
+        interface User {
+            void onGetUserByUserName(com.gravity.chatme.business.model.User user);
+        }
     }
 
 }
