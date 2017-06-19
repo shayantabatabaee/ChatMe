@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="recycler_view_padding">10dp</dimen>
+    <dimen name="recycler_view_padding">6dp</dimen>
     <dimen name="message_text_view_margin_bottom">3dp</dimen>
     <dimen name="message_view_margin_bottom">5dp</dimen>
     <dimen name="message_layout_margin">12dp</dimen>
@@ -14,6 +14,6 @@
     <dimen name="nav_header_height">160dp</dimen>
     <dimen name="profile_width">75dp</dimen>
     <dimen name="profile_height">75dp</dimen>
-    <dimen name="message_profile_width">70dp</dimen>
-    <dimen name="message_profile_height">70dp</dimen>
+    <dimen name="message_profile_width">65dp</dimen>
+    <dimen name="message_profile_height">65dp</dimen>
 </resources>

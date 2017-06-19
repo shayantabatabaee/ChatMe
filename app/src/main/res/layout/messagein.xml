@@ -39,14 +39,12 @@
 
         <TextView
             android:id="@+id/messageContent"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/message_text_view_margin_bottom"
             android:layout_marginEnd="@dimen/message_layout_margin"
             android:layout_marginStart="@dimen/message_layout_margin"
             android:gravity="start"
-            android:maxEms="10"
-
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:textColor="@color/black"
             android:textSize="16sp" />
@@ -60,9 +58,12 @@
             android:layout_marginStart="@dimen/message_layout_margin"
             android:gravity="end"
             android:minEms="8"
-
             android:textColor="@color/black" />
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="120dp"
+        android:layout_height="match_parent" />
 
 
 </LinearLayout>
