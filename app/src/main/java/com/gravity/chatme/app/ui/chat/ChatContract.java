@@ -19,6 +19,8 @@ public interface ChatContract {
         void startActivity();
 
         void displayMemberNumber(long number);
+
+        void displayTyping(String typingContent);
     }
 
     interface Presenter {
@@ -30,6 +32,8 @@ public interface ChatContract {
         void getScrolledData(long firstTime);
 
         void updateStatus(boolean online, long lastSeen);
+
+        void setIsTyping(boolean typing);
 
         void signOut();
 

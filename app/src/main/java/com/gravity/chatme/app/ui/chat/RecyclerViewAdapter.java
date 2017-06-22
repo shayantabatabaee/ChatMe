@@ -87,7 +87,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         userRepository.getUser(mMessageList.get(i).getMessageUser(), new FirebaseHelper.FirebaseHelperListener.User() {
             @Override
-            public void onGetUserByUserName(User user) {
+            public void onGetUser(User user) {
                 Glide.with(ChatApplication.getInstance().getApplicationContext()).
                         load(user.getUserImgUrl())
                         .crossFade()

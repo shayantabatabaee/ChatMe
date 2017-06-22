@@ -11,6 +11,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -56,6 +59,8 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
     NavigationView navigationView;
     @BindView(R.id.membersTitle)
     TextView membersTitle;
+    @BindView(R.id.isTyping)
+    TextView isTyping;
     //View Objects
     private TextView txtUsername;
     private TextView txtEmail;
@@ -69,6 +74,8 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
     private ArrayList<Message> messageList;
     //RecyclerView Listener Class
     private ScrollListener scrollListener;
+    //IsTyping Boolean Object
+    private boolean typing;
 
 
     @Override
@@ -90,6 +97,28 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
         imgProfile = (ImageView) navHeader.findViewById(R.id.img_profile);
 
         messageSendingContent.setOnClickListener(this);
+        messageSendingContent.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!TextUtils.isEmpty(s.toString()) && s.toString().trim().length() == 1) {
+                    typing = true;
+                    presenter.setIsTyping(typing);
+                } else if (s.toString().trim().length() == 0 && typing) {
+                    typing = false;
+                    presenter.setIsTyping(typing);
+                }
+            }
+        });
         sendButton.setOnClickListener(this);
         membersTitle.setOnClickListener(this);
 
@@ -252,6 +281,11 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
                 presenter.getScrolledData(firstTime);
             }
         }
+    }
+
+    @Override
+    public void displayTyping(String typingContent) {
+        isTyping.setText(typingContent);
     }
 }
 

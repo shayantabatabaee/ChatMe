@@ -62,6 +62,25 @@ public class ChatPresenter implements ChatContract.Presenter {
 
             }
         });
+        //SetCurrent UserName
+        userRepository.setCurrentUsername(mAuthHelper.getCurrentUser().getDisplayName());
+        //Subscribe to setIsTyping Method
+        userRepository.getIsTyping(new UserRepository.UserRepositoryListener.Typing() {
+            @Override
+            public void onTypingUserChanged(ArrayList<String> username) {
+
+                String typingContent = "";
+                if (username.size() > 1) {
+                    typingContent = username.get(0) +
+                            " and others are typing . . .";
+                } else if (username.size() == 1) {
+                    typingContent = username.get(0) + " is typing . . .";
+                } else if (username.size() == 0) {
+                    typingContent = "";
+                }
+                view.displayTyping(typingContent);
+            }
+        });
     }
 
     @Override
@@ -123,6 +142,12 @@ public class ChatPresenter implements ChatContract.Presenter {
 
     }
 
+    @Override
+    public void setIsTyping(boolean typing) {
+        if (mAuthHelper.getCurrentUser() != null) {
+            userRepository.setIsTyping(mAuthHelper.getCurrentUser().getDisplayName(), typing);
+        }
+    }
 
     @Override
     public String getCurrentUser() {

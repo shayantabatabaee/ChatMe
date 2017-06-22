@@ -169,7 +169,7 @@ public class FirebaseHelper {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
-                listener.onGetUserByUserName(user);
+                listener.onGetUser(user);
             }
 
             @Override
@@ -177,6 +177,44 @@ public class FirebaseHelper {
 
             }
         });
+
+    }
+
+    public void getIsTyping(final FirebaseHelperListener.User listener) {
+        mDatabaseReference.child("users").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                User user = dataSnapshot.getValue(User.class);
+                listener.onGetUser(user);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                User user = dataSnapshot.getValue(User.class);
+                listener.onGetUser(user);
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void setIsTyping(String username, boolean typing) {
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put("typing", typing);
+        mDatabaseReference.child("users").child(username).updateChildren(childUpdates);
     }
 
 
@@ -200,8 +238,9 @@ public class FirebaseHelper {
         }
 
         interface User {
-            void onGetUserByUserName(com.gravity.chatme.business.model.User user);
+            void onGetUser(com.gravity.chatme.business.model.User user);
         }
+
     }
 
 }

@@ -27,6 +27,8 @@ public class User {
     private long lastSeen;
     @Ignore
     private boolean online;
+    @Ignore
+    private boolean typing;
 
     public User() {
     }
@@ -38,6 +40,7 @@ public class User {
         this.userImgUrl = userImgUrl;
         this.lastSeen = new Date().getTime();
         this.online = true;
+        this.typing = false;
     }
 
     public void setUsername(String username) {
@@ -74,6 +77,10 @@ public class User {
 
     public boolean isOnline() {
         return online;
+    }
+
+    public boolean isTyping() {
+        return typing;
     }
 
     @Exclude

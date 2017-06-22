@@ -17,10 +17,19 @@ public class UserRepository {
     private UserDao userDao;
     //Instance Object
     private static UserRepository sInstance;
+    //IsTyping Lists
+    private ArrayList<String> typingList;
+    //Current Username
+    private String currentUser;
+
+    public void setCurrentUsername(String currentUser) {
+        this.currentUser = currentUser;
+    }
 
     private UserRepository() {
         this.userDao = ChatMeDatabase.getDatabase(ChatApplication.getInstance().getApplicationContext()).userDao();
         this.firebaseHelper = FirebaseHelper.getInstance();
+        this.typingList = new ArrayList<>();
     }
 
     public static UserRepository getInstance() {
@@ -69,17 +78,37 @@ public class UserRepository {
     public void getUser(String username, final FirebaseHelper.FirebaseHelperListener.User listener) {
         User user = userDao.getUser(username);
         if (user != null) {
-            listener.onGetUserByUserName(user);
+            listener.onGetUser(user);
         } else {
             firebaseHelper.getUserByUsername(username, new FirebaseHelper.FirebaseHelperListener.User() {
                 @Override
-                public void onGetUserByUserName(User user) {
+                public void onGetUser(User user) {
                     userDao.insertUser(user);
-                    listener.onGetUserByUserName(user);
+                    listener.onGetUser(user);
                 }
             });
 
         }
+    }
+
+    public void setIsTyping(String username, boolean typing) {
+        firebaseHelper.setIsTyping(username, typing);
+    }
+
+    public void getIsTyping(final UserRepositoryListener.Typing listener) {
+        firebaseHelper.getIsTyping(new FirebaseHelper.FirebaseHelperListener.User() {
+            @Override
+            public void onGetUser(User user) {
+                if (user.isTyping() && !typingList.contains(user.getUsername())
+                        && !user.getUsername().equals(currentUser)) {
+                    typingList.add(user.getUsername());
+                } else if (!user.isTyping()) {
+                    typingList.remove(user.getUsername());
+
+                }
+                listener.onTypingUserChanged(typingList);
+            }
+        });
     }
 
     public interface UserRepositoryListener {
@@ -91,5 +120,10 @@ public class UserRepository {
         interface Status {
             void onUserRetrieved(ArrayList<User> users);
         }
+
+        interface Typing {
+            void onTypingUserChanged(ArrayList<String> username);
+        }
+
     }
 }
