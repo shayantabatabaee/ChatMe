@@ -24,8 +24,7 @@ import java.util.ArrayList;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
     private ArrayList<Message> mMessageList;
-    private String userName;
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -47,9 +46,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     }
 
-    public RecyclerViewAdapter(ArrayList<Message> mMessageList, String userName) {
+    public RecyclerViewAdapter(ArrayList<Message> mMessageList) {
         this.mMessageList = mMessageList;
-        this.userName = userName;
         this.userRepository = UserRepository.getInstance();
     }
 
@@ -69,7 +67,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public int getItemViewType(int position) {
-        if (mMessageList.get(position).getMessageUser().equals(userName)) {
+        if (mMessageList.get(position).getMessageUser().equals(userRepository.getCurrentUser().getUsername())) {
             return 0;
         } else {
             return 1;

@@ -23,6 +23,7 @@
         </activity>
 
         <activity
+            android:launchMode="singleInstance"
             android:name=".app.ui.status.StatusActivity"
             android:theme="@style/AppTheme.DialogActivity"/>
 

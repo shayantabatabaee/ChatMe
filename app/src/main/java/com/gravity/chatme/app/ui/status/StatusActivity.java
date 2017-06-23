@@ -42,6 +42,12 @@ public class StatusActivity extends AppCompatActivity implements StatusContract.
         presenter.retrieveData();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        presenter.detachView();
+    }
+
     public void initObjects() {
         unbinder = ButterKnife.bind(this);
         presenter = new StatusPresenter(this);

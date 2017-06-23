@@ -33,7 +33,7 @@ public class FirebaseHelper {
         mDatabaseReference = FirebaseDatabase.getInstance().getReference();
     }
 
-
+    //Message Section
     public void saveMessage(Message message, DatabaseReference.CompletionListener completionListener) {
         primaryKey = mDatabaseReference.child("messages").push().getKey();
         message.setUid(primaryKey);
@@ -109,7 +109,7 @@ public class FirebaseHelper {
         });
     }
 
-
+    //User Section
     public void addUser(User user) {
         mDatabaseReference.child("users").child(user.getUsername()).setValue(user);
     }

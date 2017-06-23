@@ -19,9 +19,16 @@ public class StatusPresenter implements StatusContract.presenter {
         UserRepository.getInstance().getUsersStatus(new UserRepository.UserRepositoryListener.Status() {
             @Override
             public void onUserRetrieved(ArrayList<User> users) {
-                view.displayData(users);
+                if (view != null) {
+                    view.displayData(users);
+                }
             }
 
         });
+    }
+
+    @Override
+    public void detachView() {
+        this.view = null;
     }
 }

@@ -18,25 +18,51 @@ public class ChatPresenter implements ChatContract.Presenter {
     private AuthHelper mAuthHelper;
     //UserRepository object
     private UserRepository userRepository;
+    //Instance Object
+    private static ChatPresenter sInstance;
 
-    public ChatPresenter(ChatActivity view, GoogleApiClient.Builder builder) {
+    public static ChatPresenter getInstance(ChatActivity view, GoogleApiClient.Builder builder) {
+        if (sInstance == null) {
+            sInstance = new ChatPresenter(view, builder);
+        }
+        return sInstance;
+    }
+
+
+    private ChatPresenter(ChatActivity view, GoogleApiClient.Builder builder) {
         this.view = view;
         mAuthHelper = AuthHelper.getInstance(builder);
-        chatRepository = new ChatRepository(view.getApplicationContext(), mAuthHelper);
         userRepository = UserRepository.getInstance();
+        userRepository.setAuthHelper(mAuthHelper);
+        chatRepository = new ChatRepository(view.getApplicationContext());
+    }
+
+    @Override
+    public void attachView(ChatActivity view) {
+        this.view = view;
+    }
+
+    @Override
+    public void detachView() {
+        this.view = null;
     }
 
     @Override
     public void getData() {
-        //Load Navigation Header Information
-        view.loadNavHeader(mAuthHelper.getCurrentUser().getDisplayName(),
-                mAuthHelper.getCurrentUser().getEmail(),
-                mAuthHelper.getCurrentUser().getPhotoUrl().toString());
+        if (view != null) {
+            //Load Navigation Header Information
+            view.loadNavHeader(userRepository.getCurrentUser().getUsername(),
+                    userRepository.getCurrentUser().getEmail(),
+                    userRepository.getCurrentUser().getUserImgUrl());
+        }
+
         //Load Members In Group
         userRepository.getUserNumbers(new UserRepository.UserRepositoryListener.Number() {
             @Override
             public void onUserNumberRetrieved(long number) {
-                view.displayMemberNumber(number);
+                if (view != null) {
+                    view.displayMemberNumber(number);
+                }
             }
         });
 
@@ -44,17 +70,24 @@ public class ChatPresenter implements ChatContract.Presenter {
         chatRepository.getMessages(new ChatRepository.ChatRepositoryListener() {
             @Override
             public void onGetUpperMessages(ArrayList<Message> messages) {
-                view.displayUpperData(messages);
+                if (view != null) {
+                    view.displayUpperData(messages);
+                }
             }
 
             @Override
             public void onGetLowerMessages(ArrayList<Message> messages) {
-                view.displayLowerData(messages);
+                if (view != null) {
+                    view.displayLowerData(messages);
+                }
             }
 
             @Override
             public void onGetMessage(Message message) {
-                view.displayData(message);
+
+                if (view != null) {
+                    view.displayData(message);
+                }
             }
 
             @Override
@@ -62,8 +95,6 @@ public class ChatPresenter implements ChatContract.Presenter {
 
             }
         });
-        //SetCurrent UserName
-        userRepository.setCurrentUsername(mAuthHelper.getCurrentUser().getDisplayName());
         //Subscribe to setIsTyping Method
         userRepository.getIsTyping(new UserRepository.UserRepositoryListener.Typing() {
             @Override
@@ -78,17 +109,23 @@ public class ChatPresenter implements ChatContract.Presenter {
                 } else if (username.size() == 0) {
                     typingContent = "";
                 }
-                view.displayTyping(typingContent);
+                if (view != null) {
+                    view.displayTyping(typingContent);
+                }
             }
         });
+
     }
 
     @Override
     public void getScrolledData(long firstTime) {
+
         chatRepository.retrieveOnScrolledMessages(firstTime, new ChatRepository.ChatRepositoryListener() {
             @Override
             public void onGetUpperMessages(ArrayList<Message> messages) {
-                view.displayUpperData(messages);
+                if (view != null) {
+                    view.displayUpperData(messages);
+                }
             }
 
             @Override
@@ -106,6 +143,7 @@ public class ChatPresenter implements ChatContract.Presenter {
 
             }
         });
+
     }
 
     @Override
@@ -115,10 +153,13 @@ public class ChatPresenter implements ChatContract.Presenter {
 
     @Override
     public void signOut() {
+
         mAuthHelper.signOut(new AuthHelper.AuthHelperListener() {
             @Override
             public void onSignOut() {
-                view.startActivity();
+                if (view != null) {
+                    view.startActivity();
+                }
             }
 
             @Override
@@ -131,26 +172,16 @@ public class ChatPresenter implements ChatContract.Presenter {
 
             }
         });
+
     }
 
     @Override
     public void updateStatus(boolean online, long lastSeen) {
-        if (mAuthHelper.getCurrentUser() != null) {
-            userRepository.updateStatus(mAuthHelper.getCurrentUser().getDisplayName(),
-                    online, lastSeen);
-        }
-
+        userRepository.updateStatus(online, lastSeen);
     }
 
     @Override
     public void setIsTyping(boolean typing) {
-        if (mAuthHelper.getCurrentUser() != null) {
-            userRepository.setIsTyping(mAuthHelper.getCurrentUser().getDisplayName(), typing);
-        }
-    }
-
-    @Override
-    public String getCurrentUser() {
-        return mAuthHelper.getCurrentUser().getDisplayName();
+        userRepository.setIsTyping(typing);
     }
 }

@@ -12,6 +12,8 @@ public interface StatusContract {
 
     interface presenter {
         void retrieveData();
+
+        void detachView();
     }
 
 }

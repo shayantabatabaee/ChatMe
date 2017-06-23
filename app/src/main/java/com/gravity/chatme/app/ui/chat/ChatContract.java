@@ -25,6 +25,10 @@ public interface ChatContract {
 
     interface Presenter {
 
+        void detachView();
+
+        void attachView(ChatActivity view);
+
         void getData();
 
         void sendData(String content);
@@ -36,9 +40,6 @@ public interface ChatContract {
         void setIsTyping(boolean typing);
 
         void signOut();
-
-        String getCurrentUser();
-
 
     }
 }

@@ -1,8 +1,10 @@
 package com.gravity.chatme.business;
 
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.gravity.chatme.app.ChatApplication;
 import com.gravity.chatme.business.model.User;
+import com.gravity.chatme.business.net.AuthHelper;
 import com.gravity.chatme.business.net.FirebaseHelper;
 import com.gravity.chatme.business.storage.database.ChatMeDatabase;
 import com.gravity.chatme.business.storage.database.UserDao;
@@ -19,12 +21,10 @@ public class UserRepository {
     private static UserRepository sInstance;
     //IsTyping Lists
     private ArrayList<String> typingList;
-    //Current Username
-    private String currentUser;
-
-    public void setCurrentUsername(String currentUser) {
-        this.currentUser = currentUser;
-    }
+    //Auth Helper
+    private AuthHelper mAuthHelper;
+    //Current User
+    private User mCurrentUser;
 
     private UserRepository() {
         this.userDao = ChatMeDatabase.getDatabase(ChatApplication.getInstance().getApplicationContext()).userDao();
@@ -37,6 +37,16 @@ public class UserRepository {
             sInstance = new UserRepository();
         }
         return sInstance;
+    }
+
+    public void setAuthHelper(AuthHelper mAuthHelper) {
+        this.mAuthHelper = mAuthHelper;
+        mCurrentUser = new User(mAuthHelper.getCurrentUser().getDisplayName(), mAuthHelper.getCurrentUser().getEmail(),
+                FirebaseInstanceId.getInstance().getToken(), mAuthHelper.getCurrentUser().getPhotoUrl().toString());
+    }
+
+    public User getCurrentUser() {
+        return mCurrentUser;
     }
 
     public void getUserNumbers(final UserRepositoryListener.Number listener) {
@@ -63,16 +73,22 @@ public class UserRepository {
         firebaseHelper.addUser(user);
     }
 
-    public void updateUserToken(String username, String token) {
-        firebaseHelper.updateUserToken(username, token);
+    public void updateUserToken(String token) {
+        if (getCurrentUser() != null) {
+            firebaseHelper.updateUserToken(getCurrentUser().getUsername(), token);
+        }
     }
 
-    public void updateStatus(String username, boolean online, long lastSeen) {
-        firebaseHelper.updateStatus(username, online, lastSeen);
+    public void updateStatus(boolean online, long lastSeen) {
+        if (getCurrentUser() != null) {
+            firebaseHelper.updateStatus(getCurrentUser().getUsername(), online, lastSeen);
+        }
     }
 
-    public void removeUser(String username) {
-        firebaseHelper.removeUser(username);
+    public void removeUser() {
+        if (getCurrentUser() != null) {
+            firebaseHelper.removeUser(getCurrentUser().getUsername());
+        }
     }
 
     public void getUser(String username, final FirebaseHelper.FirebaseHelperListener.User listener) {
@@ -91,8 +107,8 @@ public class UserRepository {
         }
     }
 
-    public void setIsTyping(String username, boolean typing) {
-        firebaseHelper.setIsTyping(username, typing);
+    public void setIsTyping(boolean typing) {
+        firebaseHelper.setIsTyping(getCurrentUser().getUsername(), typing);
     }
 
     public void getIsTyping(final UserRepositoryListener.Typing listener) {
@@ -100,7 +116,7 @@ public class UserRepository {
             @Override
             public void onGetUser(User user) {
                 if (user.isTyping() && !typingList.contains(user.getUsername())
-                        && !user.getUsername().equals(currentUser)) {
+                        && !user.getUsername().equals(getCurrentUser().getUsername())) {
                     typingList.add(user.getUsername());
                 } else if (!user.isTyping()) {
                     typingList.remove(user.getUsername());

@@ -92,10 +92,6 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
 
         setupNavigationView();
 
-        txtUsername = (TextView) navHeader.findViewById(R.id.username);
-        txtEmail = (TextView) navHeader.findViewById(R.id.email);
-        imgProfile = (ImageView) navHeader.findViewById(R.id.img_profile);
-
         messageSendingContent.setOnClickListener(this);
         messageSendingContent.addTextChangedListener(new TextWatcher() {
             @Override
@@ -145,16 +141,29 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
         ChatApplication.isInBackground = true;
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // unbinder.unbind();
+        presenter.detachView();
+    }
+
     private void initObjects() {
         unbinder = ButterKnife.bind(this);
         navHeader = navigationView.getHeaderView(0);
+
+        txtUsername = (TextView) navHeader.findViewById(R.id.username);
+        txtEmail = (TextView) navHeader.findViewById(R.id.email);
+        imgProfile = (ImageView) navHeader.findViewById(R.id.img_profile);
+
         messageList = new ArrayList<>();
         layoutManager = new LinearLayoutManager(this);
         GoogleApiClient.Builder mGoogleApiClientBuilder = new GoogleApiClient.Builder(getApplicationContext())
                 .enableAutoManage(this, null);
-        presenter = new ChatPresenter(this, mGoogleApiClientBuilder);
-        //TODO:Fix presenter.getCurrentUser
-        adapter = new RecyclerViewAdapter(messageList, presenter.getCurrentUser());
+        //presenter = new ChatPresenter(this, mGoogleApiClientBuilder);
+        presenter = ChatPresenter.getInstance(this, mGoogleApiClientBuilder);
+        presenter.attachView(this);
+        adapter = new RecyclerViewAdapter(messageList);
     }
 
     private void setupNavigationView() {

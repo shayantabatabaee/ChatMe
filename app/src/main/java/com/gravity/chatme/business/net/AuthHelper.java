@@ -82,7 +82,7 @@ public class AuthHelper {
     }
 
     public void signOut(final AuthHelperListener listener) {
-        userRepository.removeUser(mAuth.getCurrentUser().getDisplayName());
+        userRepository.removeUser();
         mAuth.signOut();
 
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
