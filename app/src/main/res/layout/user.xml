@@ -42,7 +42,8 @@
             android:id="@+id/userLastSeen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
+            android:textSize="11sp"
+            android:singleLine="true"
             android:layout_marginBottom="@dimen/message_text_view_margin_bottom"
             android:layout_marginEnd="@dimen/message_layout_margin"
             android:layout_marginStart="@dimen/message_layout_margin" />

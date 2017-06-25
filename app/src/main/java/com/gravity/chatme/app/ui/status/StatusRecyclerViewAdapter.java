@@ -14,10 +14,9 @@ import com.gravity.chatme.R;
 import com.gravity.chatme.app.ChatApplication;
 import com.gravity.chatme.business.model.User;
 import com.gravity.chatme.util.CircleTransform;
+import com.gravity.chatme.util.DateComparator;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class StatusRecyclerViewAdapter extends RecyclerView.Adapter<StatusRecyclerViewAdapter.ViewHolder> {
 
@@ -60,7 +59,7 @@ public class StatusRecyclerViewAdapter extends RecyclerView.Adapter<StatusRecycl
         if (userList.get(i).isOnline()) {
             viewHolder.lastSeen.setText("Online");
         } else {
-            viewHolder.lastSeen.setText(getLastSeen(userList.get(i).getLastSeen()));
+            viewHolder.lastSeen.setText(DateComparator.compareDate(userList.get(i).getLastSeen()));
         }
         Glide.with(ChatApplication.getInstance().getApplicationContext()).
                 load(userList.get(i).getUserImgUrl())
@@ -71,14 +70,6 @@ public class StatusRecyclerViewAdapter extends RecyclerView.Adapter<StatusRecycl
                 .into(viewHolder.userImage);
     }
 
-    private String getLastSeen(long userLastSeen) {
-        long currentTime = new Date().getTime();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
-        if (simpleDateFormat.format(userLastSeen).equals(simpleDateFormat.format(currentTime))) {
-            return "Last Seen : Today at " + new SimpleDateFormat("hh:mm a").format(userLastSeen);
-        }
-        return "Last Seen : " + new SimpleDateFormat("MMM d, hh:mm a").format(userLastSeen);
-    }
 
     @Override
     public int getItemCount() {

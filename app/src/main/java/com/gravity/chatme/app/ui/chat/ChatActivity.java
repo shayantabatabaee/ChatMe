@@ -258,7 +258,6 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
                 }
             });
             recyclerView.scrollToPosition(messages.size() + 2);
-            recyclerView.addOnScrollListener(scrollListener);
         }
     }
 
@@ -288,6 +287,7 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
                 recyclerView.removeOnScrollListener(this);
                 long firstTime = messageList.get(0).getMessageTime();
                 presenter.getScrolledData(firstTime);
+                recyclerView.addOnScrollListener(scrollListener);
             }
         }
     }
