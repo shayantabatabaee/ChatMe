@@ -10,4 +10,5 @@
     <color name="black">#000000</color>
     <color name="textInputHintColor">#7A7A7E</color>
     <color name="colorSignInActivityBackground">#2B2B2B</color>
+    <color name="progressBarColor">#F44336</color>
 </resources>

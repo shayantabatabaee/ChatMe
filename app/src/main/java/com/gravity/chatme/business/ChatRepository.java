@@ -2,8 +2,6 @@ package com.gravity.chatme.business;
 
 import android.content.Context;
 
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.gravity.chatme.business.model.Message;
 import com.gravity.chatme.business.net.FirebaseHelper;
 import com.gravity.chatme.business.storage.database.ChatMeDatabase;
@@ -97,7 +95,9 @@ public class ChatRepository {
             public void onSingleMessageRecieved(Message message) {
                 listener.onGetMessage(message);
                 messageList.add(message);
-                messageDao.insertMessage(message);
+                if (!message.getMessageUser().equals(userRepository.getCurrentUser().getUsername())) {
+                    messageDao.insertMessage(message);
+                }
             }
 
             @Override
@@ -137,16 +137,20 @@ public class ChatRepository {
         }
     }
 
-    public void sendMessage(String messageContent) {
-        final Message message = new Message();
-        message.setMessageUser(userRepository.getCurrentUser().getUsername());
-        message.setMessageTime(new Date().getTime());
-        message.setMessageContent(messageContent);
-        if (!message.getMessageContent().equals("")) {
-            firebaseHelper.saveMessage(message, new DatabaseReference.CompletionListener() {
+    public void sendMessage(String messageContent, final ChatSentListener listener) {
+        final Message tempMessage = new Message();
+        tempMessage.setMessageUser(userRepository.getCurrentUser().getUsername());
+        tempMessage.setMessageTime(new Date().getTime());
+        tempMessage.setMessageContent(messageContent);
+        if (!tempMessage.getMessageContent().equals("")) {
+            firebaseHelper.saveMessage(tempMessage, new FirebaseHelper.FirebaseHelperListener.messageDao() {
                 @Override
-                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                    //messageDao.insertMessage(messagein);
+                public void onComplete(Message message) {
+                    messageDao.insertMessage(message);
+                    int i = messageList.indexOf(message);
+                    messageList.remove(i);
+                    messageList.add(i, message);
+                    listener.onSent(message);
                 }
             });
         }
@@ -162,5 +166,9 @@ public class ChatRepository {
 
         void onFailure(String message);
 
+    }
+
+    public interface ChatSentListener {
+        void onSent(Message message);
     }
 }

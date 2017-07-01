@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -33,6 +34,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         public TextView messageUser;
         public TextView messageContent;
         public TextView messageTIme;
+        public ProgressBar progressBar;
         View itemView;
 
         public ViewHolder(View itemView) {
@@ -41,7 +43,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             messageUser = (TextView) itemView.findViewById(R.id.messageUser);
             messageContent = (TextView) itemView.findViewById(R.id.messageContent);
             messageTIme = (TextView) itemView.findViewById(R.id.messageTime);
+            progressBar = (ProgressBar) itemView.findViewById(R.id.messageProgressBar);
             this.itemView = itemView;
+        }
+
+        protected void changeVisibility(boolean value){
+            if(value){
+                progressBar.setVisibility(View.GONE);
+            }
         }
 
     }
@@ -81,7 +90,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         viewHolder.messageUser.setText(mMessageList.get(i).getMessageUser());
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm a");
         viewHolder.messageTIme.setText(simpleDateFormat.format(mMessageList.get(i).getMessageTime()));
-        //viewHolder.setPosition(mMessageList.get(i).getMessageUser(), userName);
+        viewHolder.changeVisibility(mMessageList.get(i).isMessageSent());
 
         userRepository.getUser(mMessageList.get(i).getMessageUser(), new FirebaseHelper.FirebaseHelperListener.User() {
             @Override

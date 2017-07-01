@@ -16,6 +16,8 @@ public class Message {
     private String messageContent;
     @ColumnInfo(name = "message_user")
     private String messageUser;
+    @ColumnInfo(name = "message_sent")
+    private boolean messageSent;
 
     public Message() {
 
@@ -31,6 +33,14 @@ public class Message {
 
     public Long getMessageTime() {
         return messageTime;
+    }
+
+    public boolean isMessageSent() {
+        return messageSent;
+    }
+
+    public void setMessageSent(boolean messageSent) {
+        this.messageSent = messageSent;
     }
 
     public void setMessageTime(Long messageTime) {
@@ -51,6 +61,17 @@ public class Message {
 
     public void setMessageUser(String messageUser) {
         this.messageUser = messageUser;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+
+        if (obj instanceof Message) {
+            return ((Message) obj).getUid().equals(this.getUid());
+        }
+
+        return false;
     }
 }
 

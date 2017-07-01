@@ -21,6 +21,8 @@ public interface ChatContract {
         void displayMemberNumber(long number);
 
         void displayTyping(String typingContent);
+
+        void dataSent(Message message);
     }
 
     interface Presenter {

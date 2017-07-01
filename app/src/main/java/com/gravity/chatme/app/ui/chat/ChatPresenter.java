@@ -148,7 +148,14 @@ public class ChatPresenter implements ChatContract.Presenter {
 
     @Override
     public void sendData(String content) {
-        chatRepository.sendMessage(content);
+        chatRepository.sendMessage(content, new ChatRepository.ChatSentListener() {
+            @Override
+            public void onSent(Message message) {
+                if (view != null) {
+                    view.dataSent(message);
+                }
+            }
+        });
     }
 
     @Override

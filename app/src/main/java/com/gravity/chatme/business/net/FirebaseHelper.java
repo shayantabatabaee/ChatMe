@@ -34,10 +34,18 @@ public class FirebaseHelper {
     }
 
     //Message Section
-    public void saveMessage(Message message, DatabaseReference.CompletionListener completionListener) {
+    public void saveMessage(final Message message, final FirebaseHelperListener.messageDao listener) {
         primaryKey = mDatabaseReference.child("messages").push().getKey();
         message.setUid(primaryKey);
-        mDatabaseReference.child("messages").child(primaryKey).setValue(message, completionListener);
+        mDatabaseReference.child("messages").child(primaryKey).setValue(message, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                if (databaseError == null) {
+                    message.setMessageSent(true);
+                    listener.onComplete(message);
+                }
+            }
+        });
     }
 
     public void fetchLowerMessages(final FirebaseHelperListener.Message listener, Long lastMessageTime) {
@@ -239,6 +247,10 @@ public class FirebaseHelper {
 
         interface User {
             void onGetUser(com.gravity.chatme.business.model.User user);
+        }
+
+        interface messageDao {
+            void onComplete(com.gravity.chatme.business.model.Message message);
         }
 
     }
