@@ -2,7 +2,6 @@ package com.gravity.chatme.app.ui.chat;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -76,6 +75,9 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
     private ScrollListener scrollListener;
     //IsTyping Boolean Object
     private boolean typing;
+    //static Variables
+    protected static final int LOWER_LEVEL = 0;
+    protected static final int UPPER_LEVEL = 1;
 
 
     @Override
@@ -156,13 +158,16 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
         txtEmail = (TextView) navHeader.findViewById(R.id.email);
         imgProfile = (ImageView) navHeader.findViewById(R.id.img_profile);
 
-        messageList = new ArrayList<>();
+
         layoutManager = new LinearLayoutManager(this);
         GoogleApiClient.Builder mGoogleApiClientBuilder = new GoogleApiClient.Builder(getApplicationContext())
                 .enableAutoManage(this, null);
         //presenter = new ChatPresenter(this, mGoogleApiClientBuilder);
         presenter = ChatPresenter.getInstance(this, mGoogleApiClientBuilder);
         presenter.attachView(this);
+
+        messageList = presenter.getMessageList();
+        //adapter = new RecyclerViewAdapter(messageList);
         adapter = new RecyclerViewAdapter(messageList);
     }
 
@@ -240,53 +245,6 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
     }
 
     @Override
-    public void displayData(Message message) {
-        messageList.add(message);
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-                adapter.notifyItemInserted(messageList.size());
-            }
-        });
-        recyclerView.smoothScrollToPosition(adapter.getItemCount());
-    }
-
-
-    @Override
-    public void displayUpperData(ArrayList<Message> messages) {
-        if (!messages.isEmpty()) {
-            messageList.addAll(0, messages);
-            new Handler().post(new Runnable() {
-                @Override
-                public void run() {
-                    adapter.notifyDataSetChanged();
-                }
-            });
-            recyclerView.scrollToPosition(messages.size() + 2);
-        }
-    }
-
-    @Override
-    public void displayLowerData(ArrayList<Message> messages) {
-        if (!messages.isEmpty()) {
-            messageList.addAll(messageList.size(), messages);
-            new Handler().post(new Runnable() {
-                @Override
-                public void run() {
-                    adapter.notifyDataSetChanged();
-                }
-            });
-            recyclerView.scrollToPosition(messageList.size() - 1);
-        }
-    }
-
-    @Override
-    public void displayDataSent(Message message) {
-        messageList.get(messageList.indexOf(message)).setMessageSent(true);
-        adapter.notifyDataSetChanged();
-    }
-
-    @Override
     public void displayMemberNumber(long number) {
         membersTitle.setText(number + " Members");
     }
@@ -306,6 +264,20 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
     @Override
     public void displayTyping(String typingContent) {
         isTyping.setText(typingContent);
+    }
+
+    @Override
+    public void displayData(int level) {
+        switch (level)
+        {
+            case UPPER_LEVEL:
+                recyclerView.scrollToPosition(12);
+                break;
+            case LOWER_LEVEL:
+                recyclerView.smoothScrollToPosition(adapter.getItemCount());
+                break;
+        }
+        adapter.notifyDataSetChanged();
     }
 }
 

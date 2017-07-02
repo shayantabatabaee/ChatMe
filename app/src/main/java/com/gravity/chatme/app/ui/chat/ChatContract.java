@@ -7,13 +7,6 @@ import java.util.ArrayList;
 public interface ChatContract {
 
     interface View {
-
-        void displayLowerData(ArrayList<Message> messages);
-
-        void displayUpperData(ArrayList<Message> messages);
-
-        void displayData(Message message);
-
         void loadNavHeader(String username, String email, String urlProfileImg);
 
         void startActivity();
@@ -22,8 +15,7 @@ public interface ChatContract {
 
         void displayTyping(String typingContent);
 
-        void displayDataSent(Message message);
-
+        void displayData(int level);
     }
 
     interface Presenter {
@@ -43,6 +35,8 @@ public interface ChatContract {
         void setIsTyping(boolean typing);
 
         void signOut();
+
+        ArrayList<Message> getMessageList();
 
     }
 }

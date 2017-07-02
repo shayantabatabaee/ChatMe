@@ -70,9 +70,11 @@ public class ChatRepository {
             firebaseHelper.fetchUpperMessages(new FirebaseHelper.FirebaseHelperListener.Message() {
                 @Override
                 public void onListMessageRecieved(ArrayList<Message> messages) {
-                    listener.onGetUpperMessages(messages);
-                    messageList.addAll(0, messages);
-                    messageDao.insertMessage(messages);
+                    if (!messages.isEmpty()) {
+                        listener.onGetUpperMessages(messages);
+                        messageList.addAll(0, messages);
+                        messageDao.insertMessage(messages);
+                    }
                 }
 
                 @Override
@@ -121,8 +123,10 @@ public class ChatRepository {
             firebaseHelper.fetchUpperMessages(new FirebaseHelper.FirebaseHelperListener.Message() {
                 @Override
                 public void onListMessageRecieved(ArrayList<Message> messages) {
-                    listener.onGetUpperMessages(messages);
-                    messageList.addAll(0, messages);
+                    if (!messages.isEmpty()) {
+                        listener.onGetUpperMessages(messages);
+                        messageList.addAll(0, messages);
+                    }
 
                 }
 
@@ -148,12 +152,18 @@ public class ChatRepository {
             firebaseHelper.saveMessage(tempMessage, new FirebaseHelper.FirebaseHelperListener.messageDao() {
                 @Override
                 public void onComplete(final Message message) {
-                    messageDao.insertMessage(message);
-                    messageList.get(messageList.indexOf(message)).setMessageSent(true);
-                    listener.onSent(message);
+                    if (message != null) {
+                        messageDao.insertMessage(message);
+                        messageList.get(messageList.indexOf(message)).setMessageSent(true);
+                        listener.onSent(message);
+                    }
                 }
             });
         }
+    }
+
+    public ArrayList<Message> getMessageList() {
+        return messageList;
     }
 
     public interface ChatRepositoryListener {

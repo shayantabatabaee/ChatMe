@@ -71,14 +71,14 @@ public class ChatPresenter implements ChatContract.Presenter {
             @Override
             public void onGetUpperMessages(ArrayList<Message> messages) {
                 if (view != null) {
-                    view.displayUpperData(messages);
+                    view.displayData(ChatActivity.UPPER_LEVEL);
                 }
             }
 
             @Override
             public void onGetLowerMessages(ArrayList<Message> messages) {
                 if (view != null) {
-                    view.displayLowerData(messages);
+                    view.displayData(ChatActivity.LOWER_LEVEL);
                 }
             }
 
@@ -86,7 +86,7 @@ public class ChatPresenter implements ChatContract.Presenter {
             public void onGetMessage(Message message) {
 
                 if (view != null) {
-                    view.displayData(message);
+                    view.displayData(ChatActivity.LOWER_LEVEL);
                 }
             }
 
@@ -124,7 +124,7 @@ public class ChatPresenter implements ChatContract.Presenter {
             @Override
             public void onGetUpperMessages(ArrayList<Message> messages) {
                 if (view != null) {
-                    view.displayUpperData(messages);
+                    view.displayData(ChatActivity.UPPER_LEVEL);
                 }
             }
 
@@ -152,7 +152,7 @@ public class ChatPresenter implements ChatContract.Presenter {
             @Override
             public void onSent(Message message) {
                 if (view != null) {
-                    view.displayDataSent(message);
+                    view.displayData(ChatActivity.LOWER_LEVEL);
                 }
             }
         });
@@ -190,6 +190,11 @@ public class ChatPresenter implements ChatContract.Presenter {
     @Override
     public void setIsTyping(boolean typing) {
         userRepository.setIsTyping(typing);
+    }
+
+    @Override
+    public ArrayList<Message> getMessageList() {
+        return chatRepository.getMessageList();
     }
 
 }
