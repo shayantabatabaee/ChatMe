@@ -52,12 +52,10 @@ public class FirebaseHelper {
         mDatabaseReference.child("messages").orderByChild("messageTime").startAt(lastMessageTime + 1).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                ArrayList<Message> messages = new ArrayList<>();
                 for (DataSnapshot messageSnapshot : dataSnapshot.getChildren()) {
                     Message message = messageSnapshot.getValue(Message.class);
-                    messages.add(message);
+                    listener.onSingleMessageRecieved(message);
                 }
-                listener.onListMessageRecieved(messages);
             }
 
             @Override
@@ -65,7 +63,6 @@ public class FirebaseHelper {
 
             }
         });
-
     }
 
     public void fetchChatMessages(final FirebaseHelperListener.Message listener, long lastMessageTime) {
@@ -224,6 +221,7 @@ public class FirebaseHelper {
         childUpdates.put("typing", typing);
         mDatabaseReference.child("users").child(username).updateChildren(childUpdates);
     }
+
 
 
     public interface FirebaseHelperListener {

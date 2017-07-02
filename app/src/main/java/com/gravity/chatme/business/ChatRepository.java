@@ -47,14 +47,16 @@ public class ChatRepository {
 
                 @Override
                 public void onSingleMessageRecieved(Message message) {
-
+                    if (!message.getMessageUser().equals(userRepository.getCurrentUser().getUsername())
+                            && !messageList.contains(message)) {
+                        messageDao.insertMessage(message);
+                        listener.onGetMessage(message);
+                        messageList.add(message);
+                    }
                 }
 
                 @Override
                 public void onListMessageRecieved(ArrayList<Message> messages) {
-                    listener.onGetLowerMessages(messages);
-                    messageList.addAll(messageList.size(), messages);
-                    messageDao.insertMessage(messages);
                 }
 
                 @Override
@@ -145,11 +147,9 @@ public class ChatRepository {
         if (!tempMessage.getMessageContent().equals("")) {
             firebaseHelper.saveMessage(tempMessage, new FirebaseHelper.FirebaseHelperListener.messageDao() {
                 @Override
-                public void onComplete(Message message) {
+                public void onComplete(final Message message) {
                     messageDao.insertMessage(message);
-                    int i = messageList.indexOf(message);
-                    messageList.remove(i);
-                    messageList.add(i, message);
+                    messageList.get(messageList.indexOf(message)).setMessageSent(true);
                     listener.onSent(message);
                 }
             });

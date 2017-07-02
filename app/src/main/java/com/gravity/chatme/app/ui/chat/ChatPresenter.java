@@ -152,7 +152,7 @@ public class ChatPresenter implements ChatContract.Presenter {
             @Override
             public void onSent(Message message) {
                 if (view != null) {
-                    view.dataSent(message);
+                    view.displayDataSent(message);
                 }
             }
         });
@@ -191,4 +191,5 @@ public class ChatPresenter implements ChatContract.Presenter {
     public void setIsTyping(boolean typing) {
         userRepository.setIsTyping(typing);
     }
+
 }

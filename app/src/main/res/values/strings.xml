@@ -12,4 +12,5 @@
         <item>Sign Out</item>
         <item>About Us</item>
     </string-array>
+    <string name="check_mark">\u2713</string>
 </resources>

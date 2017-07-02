@@ -246,7 +246,6 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
             @Override
             public void run() {
                 adapter.notifyItemInserted(messageList.size());
-
             }
         });
         recyclerView.smoothScrollToPosition(adapter.getItemCount());
@@ -282,12 +281,9 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
     }
 
     @Override
-    public void dataSent(Message message) {
-        int i = messageList.indexOf(message);
-        messageList.remove(i);
-        messageList.add(i, message);
-        /*messageList.get(messageList.indexOf(message)).setMessageSent(true);*/
-        adapter.notifyItemChanged(messageList.indexOf(message));
+    public void displayDataSent(Message message) {
+        messageList.get(messageList.indexOf(message)).setMessageSent(true);
+        adapter.notifyDataSetChanged();
     }
 
     @Override

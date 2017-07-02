@@ -35,16 +35,16 @@ public class Message {
         return messageTime;
     }
 
+    public void setMessageTime(Long messageTime) {
+        this.messageTime = messageTime;
+    }
+
     public boolean isMessageSent() {
         return messageSent;
     }
 
     public void setMessageSent(boolean messageSent) {
         this.messageSent = messageSent;
-    }
-
-    public void setMessageTime(Long messageTime) {
-        this.messageTime = messageTime;
     }
 
     public String getMessageContent() {

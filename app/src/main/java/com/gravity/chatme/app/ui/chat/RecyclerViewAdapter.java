@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -27,14 +26,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private ArrayList<Message> mMessageList;
     private UserRepository userRepository;
 
+    final static int MESSAGE_OUT_PRE_SEND = 2;
+    final static int MESSAGE_OUT_SENT = 0;
+    final static int MESSAGE_IN = 1;
+
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         public ImageView imageView;
         public TextView messageUser;
         public TextView messageContent;
-        public TextView messageTIme;
-        public ProgressBar progressBar;
+        public TextView messageTime;
         View itemView;
 
         public ViewHolder(View itemView) {
@@ -42,15 +44,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             imageView = (ImageView) itemView.findViewById(R.id.img_msg_profile);
             messageUser = (TextView) itemView.findViewById(R.id.messageUser);
             messageContent = (TextView) itemView.findViewById(R.id.messageContent);
-            messageTIme = (TextView) itemView.findViewById(R.id.messageTime);
-            progressBar = (ProgressBar) itemView.findViewById(R.id.messageProgressBar);
+            messageTime = (TextView) itemView.findViewById(R.id.messageTime);
             this.itemView = itemView;
-        }
-
-        protected void changeVisibility(boolean value){
-            if(value){
-                progressBar.setVisibility(View.GONE);
-            }
         }
 
     }
@@ -63,12 +58,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view;
-        if (i == 0) {
+        if (i == MESSAGE_OUT_SENT) {
             view = LayoutInflater.from(viewGroup.getContext())
                     .inflate(R.layout.messageout, viewGroup, false);
-        } else {
+        } else if (i == MESSAGE_IN) {
             view = LayoutInflater.from(viewGroup.getContext())
                     .inflate(R.layout.messagein, viewGroup, false);
+        } else {
+            view = LayoutInflater.from(viewGroup.getContext())
+                    .inflate(R.layout.messageoutpresend, viewGroup, false);
         }
         ViewHolder vh = new ViewHolder(view);
         return vh;
@@ -77,9 +75,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public int getItemViewType(int position) {
         if (mMessageList.get(position).getMessageUser().equals(userRepository.getCurrentUser().getUsername())) {
-            return 0;
+            if (mMessageList.get(position).isMessageSent()) {
+                return MESSAGE_OUT_SENT;
+            }
+            return MESSAGE_OUT_PRE_SEND;
         } else {
-            return 1;
+            return MESSAGE_IN;
         }
     }
 
@@ -89,8 +90,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         viewHolder.messageContent.setText(mMessageList.get(i).getMessageContent());
         viewHolder.messageUser.setText(mMessageList.get(i).getMessageUser());
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm a");
-        viewHolder.messageTIme.setText(simpleDateFormat.format(mMessageList.get(i).getMessageTime()));
-        viewHolder.changeVisibility(mMessageList.get(i).isMessageSent());
+        viewHolder.messageTime.setText(simpleDateFormat.format(mMessageList.get(i).getMessageTime()));
 
         userRepository.getUser(mMessageList.get(i).getMessageUser(), new FirebaseHelper.FirebaseHelperListener.User() {
             @Override

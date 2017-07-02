@@ -22,7 +22,8 @@ public interface ChatContract {
 
         void displayTyping(String typingContent);
 
-        void dataSent(Message message);
+        void displayDataSent(Message message);
+
     }
 
     interface Presenter {

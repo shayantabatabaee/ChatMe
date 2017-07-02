@@ -11,12 +11,23 @@
         android:layout_width="120dp"
         android:layout_height="match_parent" />
 
+    <ProgressBar
+        android:id="@+id/messageProgressBar"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/progressBarColor"
+        android:indeterminateTintMode="multiply"
+        android:visibility="visible" />
+
     <LinearLayout
         android:id="@+id/messageLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/msg_out"
         android:gravity="start"
+        android:alpha="0.7"
         android:orientation="vertical">
 
         <TextView
@@ -43,35 +54,16 @@
             android:textColor="@color/white"
             android:textSize="16sp" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/messageTime"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/message_layout_margin"
-                android:layout_marginStart="@dimen/message_layout_margin"
-                android:gravity="start"
-                android:text="@string/check_mark"
-                android:textColor="@color/white" />
-
-            <TextView
-                android:id="@+id/messageTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/message_text_view_margin_bottom"
-                android:layout_marginEnd="@dimen/message_layout_margin"
-                android:layout_marginLeft="@dimen/message_layout_margin_start"
-                android:layout_marginRight="@dimen/message_layout_margin"
-                android:layout_marginStart="@dimen/message_layout_margin_start"
-                android:gravity="start"
-                android:text="12:54 AM"
-                android:textColor="@color/white" />
-
-
-        </LinearLayout>
+            android:layout_marginBottom="@dimen/message_text_view_margin_bottom"
+            android:layout_marginEnd="@dimen/message_layout_margin"
+            android:layout_marginStart="@dimen/message_layout_margin"
+            android:gravity="start"
+            android:minEms="8"
+            android:textColor="@color/white" />
     </LinearLayout>
 
     <ImageView
