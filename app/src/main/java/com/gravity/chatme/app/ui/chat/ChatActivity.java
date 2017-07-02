@@ -15,6 +15,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -58,8 +59,12 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
     NavigationView navigationView;
     @BindView(R.id.membersTitle)
     TextView membersTitle;
+    @BindView(R.id.connectivityStatus)
+    TextView connectivityStatus;
     @BindView(R.id.isTyping)
     TextView isTyping;
+    @BindView(R.id.connectingButton)
+    Button connectingButton;
     //View Objects
     private TextView txtUsername;
     private TextView txtEmail;
@@ -119,6 +124,7 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
         });
         sendButton.setOnClickListener(this);
         membersTitle.setOnClickListener(this);
+        connectingButton.setOnClickListener(this);
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
@@ -227,6 +233,8 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
         if (v.getId() == R.id.messageSendingContent) {
             recyclerView.smoothScrollToPosition(adapter.getItemCount());
 
+        } else if (v.getId() == R.id.connectingButton) {
+            presenter.retryConnect();
         } else if (v.getId() == R.id.sendButton) {
             presenter.sendData(messageSendingContent.getText().toString());
             messageSendingContent.setText("");
@@ -249,6 +257,38 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
         membersTitle.setText(number + " Members");
     }
 
+    @Override
+    public void displayTyping(String typingContent) {
+        isTyping.setText(typingContent);
+    }
+
+    @Override
+    public void displayDisconnectEvent() {
+        membersTitle.setVisibility(View.GONE);
+        connectivityStatus.setVisibility(View.VISIBLE);
+        connectingButton.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void displayConnectEvent() {
+        membersTitle.setVisibility(View.VISIBLE);
+        connectivityStatus.setVisibility(View.GONE);
+        connectingButton.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void displayData(int level) {
+        switch (level) {
+            case UPPER_LEVEL:
+                recyclerView.scrollToPosition(12);
+                break;
+            case LOWER_LEVEL:
+                recyclerView.smoothScrollToPosition(adapter.getItemCount());
+                break;
+        }
+        adapter.notifyDataSetChanged();
+    }
+
     public class ScrollListener extends RecyclerView.OnScrollListener {
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -259,25 +299,6 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
                 recyclerView.addOnScrollListener(scrollListener);
             }
         }
-    }
-
-    @Override
-    public void displayTyping(String typingContent) {
-        isTyping.setText(typingContent);
-    }
-
-    @Override
-    public void displayData(int level) {
-        switch (level)
-        {
-            case UPPER_LEVEL:
-                recyclerView.scrollToPosition(12);
-                break;
-            case LOWER_LEVEL:
-                recyclerView.smoothScrollToPosition(adapter.getItemCount());
-                break;
-        }
-        adapter.notifyDataSetChanged();
     }
 }
 

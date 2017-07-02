@@ -5,6 +5,7 @@ import com.gravity.chatme.business.ChatRepository;
 import com.gravity.chatme.business.UserRepository;
 import com.gravity.chatme.business.model.Message;
 import com.gravity.chatme.business.net.AuthHelper;
+import com.gravity.chatme.business.net.FirebaseHelper;
 
 import java.util.ArrayList;
 
@@ -18,6 +19,8 @@ public class ChatPresenter implements ChatContract.Presenter {
     private AuthHelper mAuthHelper;
     //UserRepository object
     private UserRepository userRepository;
+    //FirebaseHelper object
+    private FirebaseHelper firebaseHelper;
     //Instance Object
     private static ChatPresenter sInstance;
 
@@ -35,6 +38,7 @@ public class ChatPresenter implements ChatContract.Presenter {
         userRepository = UserRepository.getInstance();
         userRepository.setAuthHelper(mAuthHelper);
         chatRepository = new ChatRepository(view.getApplicationContext());
+        firebaseHelper = FirebaseHelper.getInstance();
     }
 
     @Override
@@ -112,6 +116,18 @@ public class ChatPresenter implements ChatContract.Presenter {
                 if (view != null) {
                     view.displayTyping(typingContent);
                 }
+            }
+        });
+
+        firebaseHelper.isConnecting(new FirebaseHelper.FirebaseHelperListener.connecting() {
+            @Override
+            public void onConnect() {
+                view.displayConnectEvent();
+            }
+
+            @Override
+            public void onDisconnect() {
+                view.displayDisconnectEvent();
             }
         });
 
@@ -197,4 +213,8 @@ public class ChatPresenter implements ChatContract.Presenter {
         return chatRepository.getMessageList();
     }
 
+    @Override
+    public void retryConnect() {
+        firebaseHelper.goOnline();
+    }
 }

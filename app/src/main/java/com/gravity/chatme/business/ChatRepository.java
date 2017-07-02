@@ -1,6 +1,7 @@
 package com.gravity.chatme.business;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.gravity.chatme.business.model.Message;
 import com.gravity.chatme.business.net.FirebaseHelper;
@@ -22,6 +23,9 @@ public class ChatRepository {
     private UserRepository userRepository;
     //Message ArrayList
     private ArrayList<Message> messageList;
+    //Timeout
+    private static final long timeout = 7000;
+
 
     public ChatRepository(Context context) {
         firebaseHelper = FirebaseHelper.getInstance();
@@ -149,16 +153,34 @@ public class ChatRepository {
         tempMessage.setMessageTime(new Date().getTime());
         tempMessage.setMessageContent(messageContent);
         if (!tempMessage.getMessageContent().equals("")) {
-            firebaseHelper.saveMessage(tempMessage, new FirebaseHelper.FirebaseHelperListener.messageDao() {
+            final Thread thread = new Thread() {
+                boolean isComplete = false;
                 @Override
-                public void onComplete(final Message message) {
-                    if (message != null) {
-                        messageDao.insertMessage(message);
-                        messageList.get(messageList.indexOf(message)).setMessageSent(true);
-                        listener.onSent(message);
+                public void run() {
+                    firebaseHelper.saveMessage(tempMessage, new FirebaseHelper.FirebaseHelperListener.messageDao() {
+                        @Override
+                        public void onComplete(final Message message) {
+                            if (message != null) {
+                                isComplete = true;
+                                messageDao.insertMessage(message);
+                                messageList.get(messageList.indexOf(message)).setMessageSent(true);
+                                listener.onSent(message);
+                                Log.d("timeout", "setvalue to db");
+                            }
+                        }
+                    });
+                    try {
+                        sleep(timeout);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    if (!isComplete) {
+                        Log.d("timeout", "do Timeout here");
+                        firebaseHelper.purgeWrites();
                     }
                 }
-            });
+            };
+            thread.start();
         }
     }
 

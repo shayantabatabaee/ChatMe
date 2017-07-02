@@ -16,6 +16,10 @@ public interface ChatContract {
         void displayTyping(String typingContent);
 
         void displayData(int level);
+
+        void displayDisconnectEvent();
+
+        void displayConnectEvent();
     }
 
     interface Presenter {
@@ -38,5 +42,6 @@ public interface ChatContract {
 
         ArrayList<Message> getMessageList();
 
+        void retryConnect();
     }
 }

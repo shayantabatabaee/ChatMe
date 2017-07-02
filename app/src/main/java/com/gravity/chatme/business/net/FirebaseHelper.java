@@ -1,5 +1,7 @@
 package com.gravity.chatme.business.net;
 
+import android.util.Log;
+
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -46,6 +48,15 @@ public class FirebaseHelper {
                 }
             }
         });
+    }
+
+    public void purgeWrites() {
+        FirebaseDatabase.getInstance().goOffline();
+        FirebaseDatabase.getInstance().purgeOutstandingWrites();
+    }
+
+    public void goOnline() {
+        FirebaseDatabase.getInstance().goOnline();
     }
 
     public void fetchLowerMessages(final FirebaseHelperListener.Message listener, Long lastMessageTime) {
@@ -222,7 +233,27 @@ public class FirebaseHelper {
         mDatabaseReference.child("users").child(username).updateChildren(childUpdates);
     }
 
+    public void isConnecting(final FirebaseHelperListener.connecting listener) {
+        DatabaseReference connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected");
+        connectedRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                boolean connected = dataSnapshot.getValue(boolean.class);
+                if (connected) {
+                    Log.d("-conn", "connected");
+                    listener.onConnect();
+                } else {
+                    Log.d("-conn", "disconnected");
+                    listener.onDisconnect();
+                }
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
 
     public interface FirebaseHelperListener {
 
@@ -249,6 +280,12 @@ public class FirebaseHelper {
 
         interface messageDao {
             void onComplete(com.gravity.chatme.business.model.Message message);
+        }
+
+        interface connecting {
+            void onConnect();
+
+            void onDisconnect();
         }
 
     }
