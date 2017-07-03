@@ -45,6 +45,9 @@ public class FirebaseHelper {
                 if (databaseError == null) {
                     message.setMessageSent(true);
                     listener.onComplete(message);
+                } else {
+                    message.setTimeout(true);
+                    listener.onTimeout(message);
                 }
             }
         });
@@ -280,6 +283,8 @@ public class FirebaseHelper {
 
         interface messageDao {
             void onComplete(com.gravity.chatme.business.model.Message message);
+
+            void onTimeout(com.gravity.chatme.business.model.Message message);
         }
 
         interface connecting {

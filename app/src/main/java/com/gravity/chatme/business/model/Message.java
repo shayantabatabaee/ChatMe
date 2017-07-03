@@ -4,6 +4,8 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
+import com.google.firebase.database.Exclude;
+
 @Entity
 public class Message {
 
@@ -18,9 +20,19 @@ public class Message {
     private String messageUser;
     @ColumnInfo(name = "message_sent")
     private boolean messageSent;
+    @Exclude
+    private boolean timeout;
 
     public Message() {
 
+    }
+
+    public boolean isTimeout() {
+        return timeout;
+    }
+
+    public void setTimeout(boolean timeout) {
+        this.timeout = timeout;
     }
 
     public String getUid() {

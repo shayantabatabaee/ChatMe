@@ -15,7 +15,6 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -63,8 +62,6 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
     TextView connectivityStatus;
     @BindView(R.id.isTyping)
     TextView isTyping;
-    @BindView(R.id.connectingButton)
-    Button connectingButton;
     //View Objects
     private TextView txtUsername;
     private TextView txtEmail;
@@ -124,7 +121,6 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
         });
         sendButton.setOnClickListener(this);
         membersTitle.setOnClickListener(this);
-        connectingButton.setOnClickListener(this);
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
@@ -174,7 +170,7 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
 
         messageList = presenter.getMessageList();
         //adapter = new RecyclerViewAdapter(messageList);
-        adapter = new RecyclerViewAdapter(messageList);
+        adapter = new RecyclerViewAdapter(messageList,presenter);
     }
 
     private void setupNavigationView() {
@@ -233,8 +229,6 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
         if (v.getId() == R.id.messageSendingContent) {
             recyclerView.smoothScrollToPosition(adapter.getItemCount());
 
-        } else if (v.getId() == R.id.connectingButton) {
-            presenter.retryConnect();
         } else if (v.getId() == R.id.sendButton) {
             presenter.sendData(messageSendingContent.getText().toString());
             messageSendingContent.setText("");
@@ -266,14 +260,12 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
     public void displayDisconnectEvent() {
         membersTitle.setVisibility(View.GONE);
         connectivityStatus.setVisibility(View.VISIBLE);
-        connectingButton.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void displayConnectEvent() {
         membersTitle.setVisibility(View.VISIBLE);
         connectivityStatus.setVisibility(View.GONE);
-        connectingButton.setVisibility(View.GONE);
     }
 
     @Override

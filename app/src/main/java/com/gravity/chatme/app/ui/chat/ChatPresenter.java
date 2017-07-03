@@ -128,6 +128,7 @@ public class ChatPresenter implements ChatContract.Presenter {
             @Override
             public void onDisconnect() {
                 view.displayDisconnectEvent();
+                firebaseHelper.goOnline();
             }
         });
 
@@ -175,8 +176,20 @@ public class ChatPresenter implements ChatContract.Presenter {
     }
 
     @Override
-    public void signOut() {
+    public void retrySendData(int index) {
+        chatRepository.retrySendMessage(index, new ChatRepository.ChatSentListener() {
+            @Override
+            public void onSent(Message message) {
+                if (view != null) {
+                    view.displayData(ChatActivity.LOWER_LEVEL);
+                }
+            }
+        });
+    }
 
+    @Override
+    public void signOut() {
+        getMessageList().clear();
         mAuthHelper.signOut(new AuthHelper.AuthHelperListener() {
             @Override
             public void onSignOut() {
@@ -211,10 +224,5 @@ public class ChatPresenter implements ChatContract.Presenter {
     @Override
     public ArrayList<Message> getMessageList() {
         return chatRepository.getMessageList();
-    }
-
-    @Override
-    public void retryConnect() {
-        firebaseHelper.goOnline();
     }
 }

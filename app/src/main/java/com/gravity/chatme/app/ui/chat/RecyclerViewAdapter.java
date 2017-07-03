@@ -25,10 +25,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     private ArrayList<Message> mMessageList;
     private UserRepository userRepository;
+    private ChatContract.Presenter presenter;
 
     final static int MESSAGE_OUT_PRE_SEND = 2;
     final static int MESSAGE_OUT_SENT = 0;
     final static int MESSAGE_IN = 1;
+    final static int MESSAGE_OUT_FAILED = 3;
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -37,6 +39,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         public TextView messageUser;
         public TextView messageContent;
         public TextView messageTime;
+        public ImageView retrySend;
         View itemView;
 
         public ViewHolder(View itemView) {
@@ -45,14 +48,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             messageUser = (TextView) itemView.findViewById(R.id.messageUser);
             messageContent = (TextView) itemView.findViewById(R.id.messageContent);
             messageTime = (TextView) itemView.findViewById(R.id.messageTime);
+            retrySend = (ImageView) itemView.findViewById(R.id.retrySend);
             this.itemView = itemView;
         }
 
     }
 
-    public RecyclerViewAdapter(ArrayList<Message> mMessageList) {
+    public RecyclerViewAdapter(ArrayList<Message> mMessageList, ChatContract.Presenter presenter) {
         this.mMessageList = mMessageList;
         this.userRepository = UserRepository.getInstance();
+        this.presenter = presenter;
     }
 
     @Override
@@ -64,6 +69,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         } else if (i == MESSAGE_IN) {
             view = LayoutInflater.from(viewGroup.getContext())
                     .inflate(R.layout.messagein, viewGroup, false);
+        } else if (i == MESSAGE_OUT_FAILED) {
+            view = LayoutInflater.from(viewGroup.getContext())
+                    .inflate(R.layout.messageoutfailed, viewGroup, false);
         } else {
             view = LayoutInflater.from(viewGroup.getContext())
                     .inflate(R.layout.messageoutpresend, viewGroup, false);
@@ -77,6 +85,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         if (mMessageList.get(position).getMessageUser().equals(userRepository.getCurrentUser().getUsername())) {
             if (mMessageList.get(position).isMessageSent()) {
                 return MESSAGE_OUT_SENT;
+            } else if (mMessageList.get(position).isTimeout()) {
+                return MESSAGE_OUT_FAILED;
             }
             return MESSAGE_OUT_PRE_SEND;
         } else {
@@ -85,7 +95,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(final ViewHolder viewHolder, final int i) {
 
         viewHolder.messageContent.setText(mMessageList.get(i).getMessageContent());
         viewHolder.messageUser.setText(mMessageList.get(i).getMessageUser());
@@ -104,6 +114,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                         .into(viewHolder.imageView);
             }
         });
+
+        if (viewHolder.retrySend != null) {
+            viewHolder.retrySend.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    presenter.retrySendData(i);
+                }
+            });
+        }
 
     }
 

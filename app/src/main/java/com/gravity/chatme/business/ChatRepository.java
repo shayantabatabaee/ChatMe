@@ -24,7 +24,7 @@ public class ChatRepository {
     //Message ArrayList
     private ArrayList<Message> messageList;
     //Timeout
-    private static final long timeout = 7000;
+    private static final long timeout = 10000;
 
 
     public ChatRepository(Context context) {
@@ -155,6 +155,7 @@ public class ChatRepository {
         if (!tempMessage.getMessageContent().equals("")) {
             final Thread thread = new Thread() {
                 boolean isComplete = false;
+
                 @Override
                 public void run() {
                     firebaseHelper.saveMessage(tempMessage, new FirebaseHelper.FirebaseHelperListener.messageDao() {
@@ -167,6 +168,13 @@ public class ChatRepository {
                                 listener.onSent(message);
                                 Log.d("timeout", "setvalue to db");
                             }
+                        }
+
+                        @Override
+                        public void onTimeout(Message message) {
+                            messageDao.insertMessage(message);
+                            messageList.get(messageList.indexOf(message)).setTimeout(true);
+                            listener.onSent(message);
                         }
                     });
                     try {
@@ -182,6 +190,15 @@ public class ChatRepository {
             };
             thread.start();
         }
+    }
+
+    public void retrySendMessage(int index, final ChatSentListener listener) {
+        firebaseHelper.goOnline();
+        String messageContent = messageList.get(index).getMessageContent();
+        messageDao.deleteMessage(messageList.get(index));
+        messageList.remove(index);
+        sendMessage(messageContent, listener);
+
     }
 
     public ArrayList<Message> getMessageList() {

@@ -32,6 +32,8 @@ public interface ChatContract {
 
         void sendData(String content);
 
+        void retrySendData(int index);
+
         void getScrolledData(long firstTime);
 
         void updateStatus(boolean online, long lastSeen);
@@ -41,7 +43,5 @@ public interface ChatContract {
         void signOut();
 
         ArrayList<Message> getMessageList();
-
-        void retryConnect();
     }
 }
