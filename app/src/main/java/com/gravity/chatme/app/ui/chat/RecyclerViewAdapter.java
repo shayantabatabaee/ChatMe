@@ -1,6 +1,8 @@
 package com.gravity.chatme.app.ui.chat;
 
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gravity.chatme.R;
 import com.gravity.chatme.app.ChatApplication;
+import com.gravity.chatme.app.ui.contact.ContactActivity;
 import com.gravity.chatme.business.UserRepository;
 import com.gravity.chatme.business.model.Message;
 import com.gravity.chatme.business.model.User;
@@ -27,6 +30,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private UserRepository userRepository;
     private ChatContract.Presenter presenter;
 
+
     final static int MESSAGE_OUT_PRE_SEND = 2;
     final static int MESSAGE_OUT_SENT = 0;
     final static int MESSAGE_IN = 1;
@@ -40,6 +44,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         public TextView messageContent;
         public TextView messageTime;
         public ImageView retrySend;
+        private final Context context;
         View itemView;
 
         public ViewHolder(View itemView) {
@@ -50,6 +55,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             messageTime = (TextView) itemView.findViewById(R.id.messageTime);
             retrySend = (ImageView) itemView.findViewById(R.id.retrySend);
             this.itemView = itemView;
+            context = itemView.getContext();
         }
 
     }
@@ -112,6 +118,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                         .thumbnail(0.5f)
                         .diskCacheStrategy(DiskCacheStrategy.RESULT)
                         .into(viewHolder.imageView);
+            }
+        });
+        viewHolder.imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // presenter.openContactFragment(mMessageList.get(i).getMessageUser(), viewHolder.imageView);
+                Intent intent = new Intent(viewHolder.context, ContactActivity.class);
+                intent.putExtra(ContactActivity.ARG_USERNAME, mMessageList.get(i).getMessageUser());
+                viewHolder.context.startActivity(intent);
+
             }
         });
 

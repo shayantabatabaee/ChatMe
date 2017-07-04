@@ -13,4 +13,5 @@
         <item>About Us</item>
     </string-array>
     <string name="check_mark">\u2713</string>
+    <string name="activity_transition">shared_transition</string>
 </resources>

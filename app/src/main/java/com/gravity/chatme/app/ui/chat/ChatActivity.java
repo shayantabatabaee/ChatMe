@@ -66,6 +66,7 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
     private TextView txtUsername;
     private TextView txtEmail;
     private ImageView imgProfile;
+    ImageView imgMsgProfile;
     private Toolbar toolbar;
 
     //RecyclerView Objects
@@ -168,9 +169,10 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
         presenter = ChatPresenter.getInstance(this, mGoogleApiClientBuilder);
         presenter.attachView(this);
 
-        messageList = presenter.getMessageList();
+        messageList = presenter.getDataList();
         //adapter = new RecyclerViewAdapter(messageList);
-        adapter = new RecyclerViewAdapter(messageList,presenter);
+        adapter = new RecyclerViewAdapter(messageList, presenter);
+        imgMsgProfile = (ImageView) recyclerView.findViewById(R.id.img_msg_profile);
     }
 
     private void setupNavigationView() {
@@ -214,7 +216,6 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
     public void loadNavHeader(String username, String email, String urlProfileImg) {
         txtUsername.setText(username);
         txtEmail.setText(email);
-        //TODO:Read From DB
         Glide.with(getApplicationContext()).load(urlProfileImg)
                 .crossFade()
                 .bitmapTransform(new CircleTransform(getApplicationContext()))
@@ -257,13 +258,13 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
     }
 
     @Override
-    public void displayDisconnectEvent() {
+    public void displayDisconnecting() {
         membersTitle.setVisibility(View.GONE);
         connectivityStatus.setVisibility(View.VISIBLE);
     }
 
     @Override
-    public void displayConnectEvent() {
+    public void displayConnecting() {
         membersTitle.setVisibility(View.VISIBLE);
         connectivityStatus.setVisibility(View.GONE);
     }
@@ -272,6 +273,7 @@ public class ChatActivity extends AppCompatActivity implements ChatContract.View
     public void displayData(int level) {
         switch (level) {
             case UPPER_LEVEL:
+                //TODO:Reverse Input
                 recyclerView.scrollToPosition(12);
                 break;
             case LOWER_LEVEL:

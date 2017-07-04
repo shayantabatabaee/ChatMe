@@ -1,6 +1,12 @@
 package com.gravity.chatme.app.ui.chat;
 
+import android.content.Intent;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.view.ViewCompat;
+import android.widget.ImageView;
+
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.gravity.chatme.app.ui.contact.ContactActivity;
 import com.gravity.chatme.business.ChatRepository;
 import com.gravity.chatme.business.UserRepository;
 import com.gravity.chatme.business.model.Message;
@@ -52,6 +58,11 @@ public class ChatPresenter implements ChatContract.Presenter {
     }
 
     @Override
+    public ArrayList<Message> getDataList() {
+        return chatRepository.getMessageList();
+    }
+
+    @Override
     public void getData() {
         if (view != null) {
             //Load Navigation Header Information
@@ -69,7 +80,7 @@ public class ChatPresenter implements ChatContract.Presenter {
                 }
             }
         });
-
+        //TODO:NotifyItemInserted and remove upper lower
         //Load Messages
         chatRepository.getMessages(new ChatRepository.ChatRepositoryListener() {
             @Override
@@ -122,12 +133,12 @@ public class ChatPresenter implements ChatContract.Presenter {
         firebaseHelper.isConnecting(new FirebaseHelper.FirebaseHelperListener.connecting() {
             @Override
             public void onConnect() {
-                view.displayConnectEvent();
+                view.displayConnecting();
             }
 
             @Override
             public void onDisconnect() {
-                view.displayDisconnectEvent();
+                view.displayDisconnecting();
                 firebaseHelper.goOnline();
             }
         });
@@ -189,7 +200,7 @@ public class ChatPresenter implements ChatContract.Presenter {
 
     @Override
     public void signOut() {
-        getMessageList().clear();
+        getDataList().clear();
         mAuthHelper.signOut(new AuthHelper.AuthHelperListener() {
             @Override
             public void onSignOut() {
@@ -221,8 +232,5 @@ public class ChatPresenter implements ChatContract.Presenter {
         userRepository.setIsTyping(typing);
     }
 
-    @Override
-    public ArrayList<Message> getMessageList() {
-        return chatRepository.getMessageList();
-    }
+
 }

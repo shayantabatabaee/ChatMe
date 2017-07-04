@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/subMessageLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -13,7 +14,9 @@
         android:layout_width="@dimen/message_profile_width"
         android:layout_height="@dimen/message_profile_height"
         android:layout_gravity="bottom"
-        android:paddingTop="@dimen/nav_header_vertical_spacing" />
+        android:paddingTop="@dimen/nav_header_vertical_spacing"
+        android:transitionName="@string/activity_transition"
+        tools:ignore="UnusedAttribute" />
 
     <LinearLayout
         android:id="@+id/messageLayout"

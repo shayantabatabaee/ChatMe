@@ -6,7 +6,8 @@
     <color name="colorAccent">#E1E1E1</color>
 
     <color name="FabColor">#268BFF</color>
-    <color name="white">#E7E4EF</color>
+    <color name="white">#FFFFFF</color>
+    <color name="gray">#E7E4EF</color>
     <color name="black">#000000</color>
     <color name="textInputHintColor">#7A7A7E</color>
     <color name="colorSignInActivityBackground">#2B2B2B</color>

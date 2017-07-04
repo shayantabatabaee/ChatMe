@@ -17,9 +17,9 @@ public interface ChatContract {
 
         void displayData(int level);
 
-        void displayDisconnectEvent();
+        void displayDisconnecting();
 
-        void displayConnectEvent();
+        void displayConnecting();
     }
 
     interface Presenter {
@@ -42,6 +42,6 @@ public interface ChatContract {
 
         void signOut();
 
-        ArrayList<Message> getMessageList();
+        ArrayList<Message> getDataList();
     }
 }

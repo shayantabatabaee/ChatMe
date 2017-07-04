@@ -33,6 +33,10 @@
             android:name=".app.ui.chat.ChatActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
+        <activity
+            android:name=".app.ui.contact.ContactActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <service android:name=".app.firebase.FCMService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

@@ -169,6 +169,23 @@ public class FirebaseHelper {
         });
     }
 
+    public void retrieveUserStatus(String username, final FirebaseHelperListener.LastSeen listener) {
+        mDatabaseReference.child("users").child(username).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                if (user != null) {
+                    listener.onGetUser(user);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     public void retrieveUserNumbers(final FirebaseHelperListener.Number listener) {
         mDatabaseReference.child("users").addValueEventListener(new ValueEventListener() {
             @Override
@@ -275,6 +292,10 @@ public class FirebaseHelper {
 
         interface Status {
             void onUserRetrieved(ArrayList<com.gravity.chatme.business.model.User> users);
+        }
+
+        interface LastSeen {
+            void onGetUser(com.gravity.chatme.business.model.User user);
         }
 
         interface User {

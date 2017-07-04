@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/subMessageLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -25,9 +26,9 @@
         android:id="@+id/messageLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:alpha="0.7"
         android:background="@drawable/msg_out"
         android:gravity="start"
-        android:alpha="0.7"
         android:orientation="vertical">
 
         <TextView
@@ -39,7 +40,7 @@
             android:layout_marginStart="@dimen/message_layout_margin"
             android:layout_marginTop="@dimen/message_text_view_margin_top"
             android:gravity="end"
-            android:textColor="@color/white"
+            android:textColor="@color/gray"
             android:textStyle="normal|bold" />
 
         <TextView
@@ -51,7 +52,7 @@
             android:layout_marginStart="@dimen/message_layout_margin"
             android:gravity="start"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textColor="@color/white"
+            android:textColor="@color/gray"
             android:textSize="16sp" />
 
         <TextView
@@ -63,16 +64,17 @@
             android:layout_marginStart="@dimen/message_layout_margin"
             android:gravity="start"
             android:minEms="8"
-            android:textColor="@color/white" />
+            android:textColor="@color/gray" />
     </LinearLayout>
 
     <ImageView
-
         android:id="@+id/img_msg_profile"
         android:layout_width="@dimen/message_profile_width"
         android:layout_height="@dimen/message_profile_height"
         android:layout_gravity="bottom"
-        android:paddingTop="@dimen/nav_header_vertical_spacing" />
+        android:paddingTop="@dimen/nav_header_vertical_spacing"
+        android:transitionName="@string/activity_transition"
+        tools:ignore="UnusedAttribute" />
 
 
 </LinearLayout>

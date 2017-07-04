@@ -68,6 +68,11 @@ public class UserRepository {
         });
     }
 
+    public void getUserStatus(String username, FirebaseHelper.FirebaseHelperListener.LastSeen listener) {
+        firebaseHelper.retrieveUserStatus(username, listener);
+    }
+
+
     public void addUser(String username, String email, String userImgUrl, String token) {
         User user = new User(username, email, token, userImgUrl);
         firebaseHelper.addUser(user);

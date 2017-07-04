@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="90dp"
+    android:id="@+id/main_user_layout"
+    android:layout_height="85dp"
     android:layout_marginBottom="@dimen/message_view_margin_bottom"
     android:orientation="horizontal">
 
 
     <ImageView
+        android:layout_gravity="center"
         android:id="@+id/userImg"
         android:layout_width="@dimen/profile_width"
         android:layout_height="@dimen/profile_height"
         android:paddingTop="@dimen/nav_header_vertical_spacing" />
 
     <LinearLayout
+        android:gravity="center_vertical"
         android:id="@+id/userLayout"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/message_layout_margin"
         android:orientation="vertical">
 
         <TextView
@@ -29,14 +31,6 @@
             android:layout_marginTop="@dimen/message_text_view_margin_top"
             android:textStyle="normal|bold" />
 
-        <TextView
-            android:id="@+id/userEmail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:layout_marginBottom="@dimen/message_text_view_margin_bottom"
-            android:layout_marginEnd="@dimen/message_layout_margin"
-            android:layout_marginStart="@dimen/message_layout_margin" />
 
         <TextView
             android:id="@+id/userLastSeen"
